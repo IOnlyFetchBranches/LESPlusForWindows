@@ -1,0 +1,29 @@
+
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - name: Clone GitHub repository
+      uses: actions/checkout@v2
+    - name: Download and extract AutoHotKey
+      run: |
+        curl https://autohotkey.com/download/ahk.zip -o ahk.zip
+        powershell.exe -nologo -noprofile -command "& { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::ExtractToDirectory('ahk.zip', 'AutoHotKey'); }"
+    - name: Run AutoHotKey compiler to generate binary
+      run:  .\AutoHotKey\Compiler\Ahk2Exe.exe /in LiveEnhancementSuite.ahk /out "Live Enhancement Suite.exe"
+    - name: Generate Checksum for compiled binary
+      run: CertUtil -hashfile "Live Enhancement Suite.exe" SHA256 >> sha.txt
+    - name: Copy and prepare for upload
+      run: |
+        mkdir BuildResult
+        copy "Live Enhancement Suite.exe" BuildResult\"Live Enhancement Suite.exe"
+        copy sha.txt BuildResult\sha.txt
+    - name: Upload binary and checksum as artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: 'Build Result'
+        path: BuildResult\
