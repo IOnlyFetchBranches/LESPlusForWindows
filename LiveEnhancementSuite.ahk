@@ -2,7 +2,7 @@
  * * * Compile_AHK SETTINGS BEGIN * * *
 
 [AHK2EXE]
-Exe_File=%In_Dir%\Live Enhancement Suite 1.3.exe
+Exe_File=%In_Dir%\Live Enhancement Suite.exe
 Compression=0
 No_UPX=1
 Created_Date=1
@@ -30,9 +30,9 @@ Icon_5=%In_Dir%\resources\redico.ico
 ; ^^^^^^^^^^^^^^^^^^
 ; this stuff up here are settings I use to compile the EXE file; appointing icons.. etc.
 
-; Ok so, just to mentally prepare you: this source code is a complete mess. 
+; Ok so, just to mentally prepare you: this source code is a complete mess.
 ; I only really got into programming while writing this, so there's just dumb stuff happening all over.
-; Live Enhancement Suite for windows was my first programming project, and you'll especially be able to see that the sections I wrote first. 
+; Live Enhancement Suite for windows was my first programming project, and you'll especially be able to see that the sections I wrote first.
 ; They are the absolute worst to read.
 ; My apologies in advance.
 
@@ -53,7 +53,7 @@ SetDefaultMouseSpeed, 0
 #InstallKeybdHook
 #KeyHistory 100
 #SingleInstance Force
-setmousedelay, -1 
+setmousedelay, -1
 setbatchlines, -1
 #UseHook
 #MaxHotkeysPerInterval 400
@@ -207,7 +207,7 @@ FileInstall, changelog.txt, %A_ScriptDir%/changelog.txt
 	settimer, tooltipboi, 1
 	Sleep, 2
 }
-	
+
 FileReadLine, OutputVar, %A_ScriptDir%\resources\firstrun.txt, 2
 ;msgbox % OutputVar
 coolpath := A_ScriptFullPath
@@ -262,7 +262,7 @@ FileInstall, changelog.txt, %A_ScriptDir%\changelog.txt
 ;		  reading Settings.ini		;
 ;-----------------------------------;
 
-; This next loop is the settings.ini "spell checker". As a lot of variables come from this text file. 
+; This next loop is the settings.ini "spell checker". As a lot of variables come from this text file.
 ; It's important that all of them are present in the correct way; otherwise AHK might misbehave or do stupid stuff.
 ; I didn't really know how to make this work as a function back then so I just copy pasted the different checks for each of the values.
 ; Contrary to what it looks like, these are not all the same; not every field requires a 1 or a 0
@@ -271,7 +271,7 @@ Loop, Read, %A_ScriptDir%\settings.ini
 
 	line := StrReplace(A_LoopReadLine, "`r", "")
 	line := StrReplace(line, "`n", "")
-	
+
 	if (RegExMatch(line, "autoadd\s=\s") != 0){
 	result := StrSplit(line, "=", A_Space)
 	if !(result[2] = 0 or result[2] = 1){
@@ -281,7 +281,7 @@ Loop, Read, %A_ScriptDir%\settings.ini
 		}
 	autoadd := result[2]
 	}
-	
+
 	if (RegExMatch(line, "resetbrowsertobookmark\s=\s") != 0){
 	result := StrSplit(line, "=", A_Space)
 	if !(result[2] = 0 or result[2] = 1){
@@ -291,7 +291,7 @@ Loop, Read, %A_ScriptDir%\settings.ini
 		}
 	resetbrowsertobookmark := result[2]
 	}
-	
+
 	if (RegExMatch(line, "bookmarkx\s=\s") != 0){
 	result := StrSplit(line, "=", A_Space)
 		if !(RegExReplace(result[2], "[0-9]") = ""){
@@ -301,7 +301,7 @@ Loop, Read, %A_ScriptDir%\settings.ini
 		}
 	bookmarkx := result[2]
 	}
-	
+
 	if (RegExMatch(line, "bookmarky\s=\s") != 0){
 	result := StrSplit(line, "=", A_Space)
 		if !(RegExReplace(result[2], "[0-9]") = ""){
@@ -311,7 +311,7 @@ Loop, Read, %A_ScriptDir%\settings.ini
 		}
 	bookmarky := result[2]
 	}
-	
+
 	if (RegExMatch(line, "windowedcompensationpx\s=\s") != 0){
 	result := StrSplit(line, "=", A_Space)
 		if !(RegExReplace(result[2], "[0-9]") = ""){
@@ -321,7 +321,7 @@ Loop, Read, %A_ScriptDir%\settings.ini
 		}
 	windowedcompensationpx := result[2]
 	}
-	
+
 	if (RegExMatch(line, "disableloop\s=\s") != 0){
 	result := StrSplit(line, "=", A_Space)
 	if !(result[2] = 0 or result[2] = 1){
@@ -331,7 +331,7 @@ Loop, Read, %A_ScriptDir%\settings.ini
 		}
 	disableloop := result[2]
 	}
-	
+
 	if (RegExMatch(line, "saveasnewver\s=\s") != 0){
 	result := StrSplit(line, "=", A_Space)
 	if !(result[2] = 0 or result[2] = 1){
@@ -341,7 +341,7 @@ Loop, Read, %A_ScriptDir%\settings.ini
 		}
 	saveasnewver := result[2]
 	}
-	
+
 	if (RegExMatch(line, "usectrlaltsinstead\s=\s") != 0){
 	result := StrSplit(line, "=", A_Space)
 	if !(result[2] = 0 or result[2] = 1){
@@ -351,7 +351,7 @@ Loop, Read, %A_ScriptDir%\settings.ini
 		}
 	usectrlaltsinstead := result[2]
 	}
-	
+
 	if (RegExMatch(line, "altgrmarker\s=\s") != 0){
 	result := StrSplit(line, "=", A_Space)
 	if !(result[2] = 0 or result[2] = 1){
@@ -361,7 +361,7 @@ Loop, Read, %A_ScriptDir%\settings.ini
 		}
 	altgrmarker := result[2]
 	}
-	
+
 	if (RegExMatch(line, "middleclicktopan\s=\s") != 0){
 	result := StrSplit(line, "=", A_Space)
 	if !(result[2] = 0 or result[2] = 1){
@@ -371,7 +371,7 @@ Loop, Read, %A_ScriptDir%\settings.ini
 		}
 	middleclicktopan := result[2]
 	}
-	
+
 	if (RegExMatch(line, "scrollspeed\s=\s") != 0){
 	result := StrSplit(line, "=", A_Space)
 	if !(RegExReplace(result[2], "[0-9]") = ""){
@@ -381,7 +381,7 @@ Loop, Read, %A_ScriptDir%\settings.ini
 		}
 	scrollspeed := floor(result[2])
 	}
-	
+
 	if (RegExMatch(line, "addctrlshiftz\s=\s") != 0){
 	result := StrSplit(line, "=", A_Space)
 	if !(result[2] = 0 or result[2] = 1){
@@ -391,7 +391,7 @@ Loop, Read, %A_ScriptDir%\settings.ini
 		}
 	addctrlshiftz := result[2]
 	}
-	
+
 	if (RegExMatch(line, "0todelete\s=\s") != 0){
 	result := StrSplit(line, "=", A_Space)
 	if !(result[2] = 0 or result[2] = 1){
@@ -401,7 +401,7 @@ Loop, Read, %A_ScriptDir%\settings.ini
 		}
 	0todelete := result[2]
 	}
-	
+
 	if (RegExMatch(line, "absolutereplace\s=\s") != 0){
 	result := StrSplit(line, "=", A_Space)
 	if !(result[2] = 0 or result[2] = 1){
@@ -411,7 +411,7 @@ Loop, Read, %A_ScriptDir%\settings.ini
 		}
 	absolutereplace := result[2]
 	}
-	
+
 	if (RegExMatch(line, "enableclosewindow\s=\s") != 0){
 	result := StrSplit(line, "=", A_Space)
 	if !(result[2] = 0 or result[2] = 1){
@@ -421,7 +421,7 @@ Loop, Read, %A_ScriptDir%\settings.ini
 		}
 	enableclosewindow := result[2]
 	}
-	
+
 	if (RegExMatch(line, "vstshortcuts\s=\s") != 0){
 	result := StrSplit(line, "=", A_Space)
 	if !(result[2] = 0 or result[2] = 1){
@@ -432,7 +432,7 @@ Loop, Read, %A_ScriptDir%\settings.ini
 	vstshortcuts := result[2]
 	}
 
-; depricated feature	
+; depricated feature
 
 ;	if (RegExMatch(line, "superspeedmode\s=\s") != 0){
 ;	result := StrSplit(line, "=", A_Space)
@@ -443,7 +443,7 @@ Loop, Read, %A_ScriptDir%\settings.ini
 ;		}
 ;	superspeedmode := result[2]
 ;	}
-	
+
 	if (RegExMatch(line, "smarticon\s=\s") != 0){
 	result := StrSplit(line, "=", A_Space)
 	if !(result[2] = 0 or result[2] = 1){
@@ -453,7 +453,7 @@ Loop, Read, %A_ScriptDir%\settings.ini
 		}
 	smarticon := result[2]
 	}
-	
+
 	if (RegExMatch(line, "dynamicreload\s=\s") != 0){
 	result := StrSplit(line, "=", A_Space)
 	if !(result[2] = 0 or result[2] = 1){
@@ -463,7 +463,7 @@ Loop, Read, %A_ScriptDir%\settings.ini
 		}
 	dynamicreload := result[2]
 	}
-	
+
 	if (RegExMatch(line, "pianorollmacro\s=\s") != 0){
 	result := StrSplit(line, "=", A_Space)
 	if ((RegExMatch(line, "SC\d\d") = 0)){
@@ -473,7 +473,7 @@ Loop, Read, %A_ScriptDir%\settings.ini
 		}
 	pianorollmacro := result[2]
 	}
-	
+
 	if (RegExMatch(line, "pianosearch\s=\s") != 0){
 	result := StrSplit(line, "=", A_Space)
 	if !(result[2] = 0 or result[2] = 1){
@@ -483,7 +483,7 @@ Loop, Read, %A_ScriptDir%\settings.ini
 		}
 	pianosearch := result[2]
 	}
-	
+
 	if (RegExMatch(line, "enabledebug\s=\s") != 0){
 	result := StrSplit(line, "=", A_Space)
 	if !(result[2] = 0 or result[2] = 1){
@@ -493,7 +493,7 @@ Loop, Read, %A_ScriptDir%\settings.ini
 		}
 	enabledebug := result[2]
 	}
-	
+
 	if (RegExMatch(line, "addtostartup\s=\s") != 0){
 	result := StrSplit(line, "=", A_Space)
 	if !(result[2] = 0 or result[2] = 1){
@@ -523,7 +523,7 @@ IfMsgBox Yes
 	{
 	FileDelete, %A_ScriptDir%\settings.ini
 	FileInstall, settings.ini, %A_ScriptDir%/settings.ini
-	
+
 	MsgBox, 4,Live Enhancement Suite, Would you like to add the Live Enhancement Suite to startup?`n(This can be changed anytime)
 	IfMsgBox Yes
 		{
@@ -541,7 +541,7 @@ IfMsgBox Yes
 		}
 		goto, donelalalala
 		}
-		
+
 	;MsgBox You pressed No.
 	Loop, Read, %A_ScriptDir%/settings.ini, %A_ScriptDir%/settingstemp.ini
 		{
@@ -563,7 +563,7 @@ IfMsgBox Yes
 	settimer, tooltipboi, 1
 	Sleep, 2
 	}
-	
+
 if (scrollspeed = ""){ ;prevents error from empty variable, in case the user didn't want to reset their settings.ini file during an update
 	scrollspeed := 1
 }
@@ -582,7 +582,7 @@ Menu, Tray, Default, Log
 ; speeeeeeeeeeeeeeeeeeeeeeeed
 ; This used to have a variable setting "superspeedmode", but it was depricated.
 ; I'm not sure why I haven't moved this to the start of the script.
-setmousedelay -1 
+setmousedelay -1
 setbatchlines -1
 
 loop, 1{ ;adding to startup (or not)
@@ -700,7 +700,7 @@ Menu, Scales, Add, Major/Ionian, majorscale
 Menu, Scales, Add, Natural Minor/Aeolean, minorscale
 Menu, Scales, Add,
 Menu, Scales, Add, Harmonic Minor, minorscaleh
-Menu, Scales, Add, Melodic Minor, minorscalem 
+Menu, Scales, Add, Melodic Minor, minorscalem
 Menu, Scales, Add, Dorian, dorian
 Menu, Scales, Add, Phrygian, phrygian
 Menu, Scales, Add, Lydian, lydian
@@ -777,7 +777,7 @@ return  ;end of script's auto-execute section.
 return  ;end of double right click loop
 
 ; the menu show routine; which includes the part of the code that uses imagesearch to detect the piano roll on a certain portion of the screen.
-; I singled out just one area on the screen in order to improve performance. 
+; I singled out just one area on the screen in order to improve performance.
 ; Image search is actually faster than pixel search, which is why I use 2x2 pixel .pngs to achieve the same goal.
 Show() {
 Global pianosearch
@@ -851,7 +851,7 @@ Return
 ; these are after the double right click routine because it ends the auto execute section of the script.
 ; If they were higher up, the nescesary "Return" would end the auto-execute section of the script early.
 
-MButton:: 
+MButton::
 	if (middleclicktopan = 1){
 		Send {LControl down}{LAlt down}{LButton down}
 	}
@@ -1007,7 +1007,7 @@ Loop
 		}
 		goto, skipalles
 		}
-	slashcount := RegExMatch(TestForcontent, "/[^/;]+") 
+	slashcount := RegExMatch(TestForcontent, "/[^/;]+")
 	if (slashcount > 0){ ; tests if line is category
 		depth := slashcount
 		categoryname[depth] := SubStr(configoutput, (slashcount + 1))
@@ -1039,7 +1039,7 @@ Loop
 	If (configoutput = "End" or configoutput = "END" or configoutput = "end"){ ;checks for the end of the config file
 		Break
 		}
-	
+
 	;// Below this line is the stuff that happens when the config is is actually outputting entries and it's not just configuration or empty lines
 		{
 	if (outputcount = "") ;counting how many times the config has output menu entries
@@ -1048,20 +1048,20 @@ Loop
 	outputcount := outputcount + 1
 	counter := outputcount/2
 	if (counter ~= "\.0+?$|^[^\.]$"){	; on titles only
-	configoutput := StrReplace(configoutput, "&", "&&") 
+	configoutput := StrReplace(configoutput, "&", "&&")
 	}
-	
+
 	Array[mathvar] := configoutput ;putting the output in an array
-	
+
 	If (counter ~= "\.0+?$|^[^\.]$"){	; on titles only
 		actionname:= RegExReplace(configoutput, "^.*?,")
-		
+
 		if (menuitemcount = "") ;counting how many items the config has output
 		{
 		menuitemcount := 0
 		}
 		menuitemcount := menuitemcount + 1
-		
+
 		If (NoCategoryHeader = 1){
 		Menu, ALmenu, Add, % Array[mathvar], % menuitemcount
 		CategoryHeader := 0
@@ -1096,7 +1096,7 @@ goto klaar
 ; This "library" below here contains 2000 numerical variables labeled 1 through 2000.
 ; When you click a menu item in AHK, it will ALWAYS perform a "gosub", which is basically the same as a goto except it can go back to whatever it was doing beforehand once it's done.
 ; A goto can only go to a label, and AHK does not support dynamic labels.
-; I have no idea what people will name their menu entries so I thought of the infamous minecraft item ID system and picked it as a "solution". 
+; I have no idea what people will name their menu entries so I thought of the infamous minecraft item ID system and picked it as a "solution".
 ; I printed out a 4000 line AHK script that's nothing but goto markers with two lines of repeated code each.
 ; None of this code is actually executed unless a menu item is clicked; so I moved it to a library to debloat my code.
 ; I would be greatful if you could figure out a better way to do this, but right now; I'm going to keep sinning. Sinning hard forever.
@@ -1320,7 +1320,7 @@ if (stampselect != ""){
 	}
 return
 
-savenewver: 
+savenewver:
 ; this section does the ctrl+alt+s command and also includes the section that tries to parse the filename in a way that makes sense.
 ; I'm not very good at these, but this spaghetti approach works 99% of the time, so it would be ok.
 ; Ever since LES 1.0, it's gone through many different iterations.
@@ -1387,7 +1387,7 @@ else
 	Numberstuff =   ;
 	goto nounderscore
 	}
-	
+
 if (extentioncompensation = 0){
 StringTrimRight, numberstuff, numberstuff, 1
 }
@@ -1565,7 +1565,7 @@ Loop %windows%
 	id := windows%A_Index%
 	Winget processnameoutput, ProcessName, ahk_id %id%
 	WinGetClass classnameoutput, ahk_id %id%
-	if (RegExMatch(processnameoutput, "Ableton")){ 
+	if (RegExMatch(processnameoutput, "Ableton")){
 		If (RegExMatch(classnameoutput, "AbletonVstPlugClass") or RegExMatch(classnameoutput, "Vst3PlugWindow")){
 		Winclose, ahk_id %id%
 		;windowlist .= wt . "`n"
@@ -1795,10 +1795,10 @@ phaseplantloadosc:
 	if(clickcountmodifier = ""){
 		clickcountmodifier = 0
 	}
-	
+
 	quotient := wWidth/wHeight
 	clickcount := Floor((-9 * quotient) + 21)
-	
+
 	clickcount := clickcount + clickcountmodifier
 	if (clickcount < 5){
 		clickcount := 5
@@ -1807,18 +1807,18 @@ phaseplantloadosc:
 		clickcount := clickcount + 1
 	}
 	;msgbox, % "quotient: " quotient "`nclickcount: " clickcount
-	
+
 	sweetspot := (wx + (wWidth/2.402))
 	topbar := (wy + (wWidth/12.37) + (windowedcompensationpx*(31/48)))
 	bottombar := (wy - 5 + (wHeight) - (wWidth/5.43))
 	genclickspacing := (bottombar - topbar)/clickcount
-	
+
 	MouseMove, sweetspot, (topbar + 30)
 	Sendinput {Blind}{WheelDown 600}
 	sleep, 3
 	Sendinput {Blind}{WheelDown 600}
 	sleep, 25
-	
+
 	loop, % clickcount {
 		if (noisefix = true){
 			yea2 := (bottombar + 15 - (A_Index * genclickspacing))
@@ -1835,7 +1835,7 @@ phaseplantloadosc:
 		sendinput, {return}
 		Sendinput {WheelDown 30}
 	}
-	
+
 	noisefix := false
 	ppletter:= ""
 	clickcountmodifier := 0
@@ -1864,7 +1864,7 @@ if(WinActive("ahk_class AbletonVstPlugClass") or WinActive("ahk_class Vst3PlugWi
 		downamt := 2
 		upampt := 0
 		clickcountmodifier := -2
-		
+
 		noisefix := true
 		gosub, phaseplantloadosc
 	}
@@ -1940,13 +1940,13 @@ phaseplantloadmod:
 	sweetspot := (wx + wWidth - (wWidth/19))
 	bottombar := (wy - 5 + (wHeight) - (wWidth/7.79))
 	modclickspacing := (sweetspot - wx - 30)/clickcount
-	
+
 	MouseMove, sweetspot, bottombar
 	Sendinput {WheelDown 600}
 	sleep, 3
 	Sendinput {WheelDown 600}
 	sleep, 25
-	
+
 	loop, % clickcount {
 		yea2 := (sweetspot - (A_Index * modclickspacing))
 		Click, %yea2%, %bottombar%
@@ -2012,7 +2012,7 @@ if(WinActive("ahk_class AbletonVstPlugClass") or WinActive("ahk_class Vst3PlugWi
 		yea2 := ""
 		mousemove, posX, posY
 	}
-	
+
 	RegExMatch(wintitleoutput, "Kick\s2|(?=(\/))", piss)
 	if (piss = "Kick 2") and (scaling = 1){
 		MouseGetPos, posX, posY
@@ -2072,7 +2072,7 @@ if(WinActive("ahk_class AbletonVstPlugClass") or WinActive("ahk_class Vst3PlugWi
 		yea2 := ""
 		mousemove, posX, posY
 	}
-	
+
 	RegExMatch(wintitleoutput, "Kick\s2|(?=(\/))", piss)
 	if (piss = "Kick 2") and (scaling = 1){
 		MouseGetPos, posX, posY
@@ -2290,7 +2290,7 @@ coolfunc:
 	if (trackname = ""){
 		Return
 	}
-	
+
 	FileReadLine, OutputVar, %A_ScriptDir%\resources\time\%trackname%_time.txt, 1
 	if !(ErrorLevel = 1){
 		timer_%trackname% := OutputVar
@@ -2357,7 +2357,7 @@ requesttime:
 	}
 	else {
 		tracknamepretty := RegExReplace(trackname, "[\__]+", " ")
-		customboxtext := "the total time you've spent in the [" tracknamepretty "] project is`n" 
+		customboxtext := "the total time you've spent in the [" tracknamepretty "] project is`n"
 	}
 
 	Gui timemenu:+LastFoundExist
@@ -2372,7 +2372,7 @@ requesttime:
 	Gui timemenu: Add, Text, x20 y30 vMyText Right, % customboxtext
 	Gui timemenu: Add, Text, x20 %space% vMyText1, % currenttime "."
 	Gui timemenu: Add, Button, x280 y75 w80 gInfo, Reset Time
-	Gui timemenu: Add, Button, x+15 w80 gName default, Ok 
+	Gui timemenu: Add, Button, x+15 w80 gName default, Ok
 	Gui timemenu: Show, Restore w470 h110, Live Enhancement Suite , Time
 	Return
 
@@ -3154,7 +3154,7 @@ stampselect := ""
 }
 Clipboard := clipboardrescue
 clipboardrescue =   ;
-return 
+return
 
 fold3:
 stampselect := "fold32"
