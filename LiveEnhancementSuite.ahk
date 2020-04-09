@@ -18,11 +18,7 @@ Original_Filename=Live Enhancement Suite
 Product_Name=Live Enhancement Suite
 Product_Version=0.1.3.0
 [ICONS]
-Icon_1=%In_Dir%\resources\blueico.ico
-Icon_2=%In_Dir%\resources\blueico.ico
-Icon_3=%In_Dir%\resources\redico.ico
-Icon_4=%In_Dir%\resources\redico.ico
-Icon_5=%In_Dir%\resources\redico.ico
+Icon_1=%In_Dir%\resources\les_icon.ico
 
 * * * Compile_AHK SETTINGS END * * *
 */
