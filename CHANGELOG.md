@@ -1,13 +1,13 @@
 # Changelog
 
-##Alpha 3.0
+## Alpha 3.0
 
 * Added changelog
 * Fixed bugs with the save new version command; the project name should now be correct more often!
   added way more scales to the scale menu in the piano roll
 * Further improvements to overall system stability and other minor adjustments have been made to enhance the user experience
 
-##Alpha 3.1
+## Alpha 3.1
 
 * Added support for dividing lines in the plugin menu. Add "--" to the text file to add them anywhere, even in submenus!
 * Added temporary drm because dont leak pls
@@ -210,7 +210,7 @@ Added a check adn a warning for when you're running Ableton Live as an Administr
 * Place track marker (Alt + L) now works on all languages
 * Added a fallback shortcut for opening the plugin menu (Cmd + Shift + H)
 
-##Release 1.3
+## Release 1.3
 
 ## Windows
 
@@ -261,7 +261,7 @@ Added a check adn a warning for when you're running Ableton Live as an Administr
 * Removed the safe automation open shortcut. Changes to the 10.1 context menus cause it to malfunction too often.
 * Changed a japanese word in the black midi easter egg joke so it means "death" rather than telling the users to "die"
 
-###macOS
+### macOS
 
 * Fixed unintentional behavior where single character menu items would be cleared
 * Added more safety checks to shortcuts so you can't trigger them out of context as much.
