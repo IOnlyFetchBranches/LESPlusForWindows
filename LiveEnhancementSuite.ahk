@@ -141,7 +141,7 @@ if (ErrorLevel = 1 or !(OutputVar = 0)){
 
 If !(InStr(FileExist("resources"), "D")){ ;if the resources folder doesn't exist, check if there's other stuff in the current folder, otherwise spawn the text box.
 Loop, %A_ScriptDir%\*.*,1,1
-If (A_Index > 1)
+If (A_Index > 3)
 {
 MsgBox,48,Live Enhancement Suite, % "You have placed LES in a directory that contains other files.`n LES will create new files when used for the first time.`n Please move the program to a dedicated directory."
 exitapp
