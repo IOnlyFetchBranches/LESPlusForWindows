@@ -31,6 +31,8 @@ SetupIconFile=resources\les_icon.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
+ArchitecturesAllowed=x64
+ArchitecturesInstallIn64BitMode=x64
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
