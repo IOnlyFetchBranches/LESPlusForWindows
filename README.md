@@ -37,11 +37,15 @@ The Live Enhancement Suite is a self-managing compiled [AutoHotKey](https://www.
   ***Sidenote: If you are trying to debug the LiveEnhancementSuite script, you may run it as a normal AutoHotKey script, building is generally reserved for releases***
 
 ### Building with CompileAHK gui
+* Clone the repository `git clone https://github.com/LiveEnhancementSuite/LESforWindows`
+
 * Download CompileAHK's gui here: https://github.com/mercury233/compile-ahk
 
 * Once installed, simply right click the .ahk file and choose "Compile with options"
 
 ### Building the installer
+* Clone the repository `git clone https://github.com/LiveEnhancementSuite/LESforWindows`
+
 * Download and install the latest version of Inno Setup from https://jrsoftware.org/isinfo.php
 
 * Open the `InnoSetupScript.iss` file with Inno Setup
