@@ -1,4 +1,4 @@
-![Live Enhancement Suite](https://raw.githubusercontent.com/itsbartsimpson/LESforMacOS/master/Hammerspoon/Images.xcassets/AppIcon.appiconset/icon_256x256.png)
+![Live Enhancement Suite](https://raw.githubusercontent.com/LiveEnhancementSuite/LESforMacOS/master/Hammerspoon/Images.xcassets/AppIcon.appiconset/icon_256x256.png)
 
 [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FLiveEnhancementSuite%2FLESforWindows%2Fbadge%3Fref%3Dmaster&style=flat)](https://actions-badge.atrox.dev/LiveEnhancementSuite/LESforWindows/goto?ref=master)
 
@@ -31,12 +31,13 @@ The Live Enhancement Suite is a self-managing compiled [AutoHotKey](https://www.
 
 * Go to the folder of the repository `cd LESforWindows`
 
-* Run the AutoHotKey compiler `C:\Program Files\AutoHotkey\Compiler\Ahk2Exe.exe /in LiveEnhancementSuite.ahk /out "Live Enhancement Suite.exe"`
+* Run the AutoHotKey compiler `"C:\Program Files\AutoHotkey\Compiler\Ahk2Exe.exe" /in LiveEnhancementSuite.ahk /out "Live Enhancement Suite.exe"`
 
   ***Sidenote: If you are trying to debug the LiveEnhancementSuite script, you may run it as a normal AutoHotKey script, building is generally reserved for releases***
 
 ## Anything else?
 
-**LESforMacOS and HSModule are released under the MIT License**
+**LESforWindows is released under the MIT License**
 
 Copyright © 2019-2020 [Dylan Tallchief](https://twitter.com/dylantallchief) and [Inverted Silence](https://twitter.com/invertedsilence)
+
