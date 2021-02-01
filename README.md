@@ -58,5 +58,5 @@ The Live Enhancement Suite is a self-managing compiled [AutoHotKey](https://www.
 
 **LESforWindows is released under the MIT License**
 
-Copyright © 2019-2020 [Dylan Tallchief](https://twitter.com/dylantallchief) and [Inverted Silence](https://twitter.com/invertedsilence)
+Copyright © 2019-2021 [Dylan Tallchief](https://twitter.com/dylantallchief) and [Inverted Silence](https://twitter.com/invertedsilence)
 
