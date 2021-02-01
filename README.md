@@ -43,6 +43,8 @@ The Live Enhancement Suite is a self-managing compiled [AutoHotKey](https://www.
 
 * Once installed, simply right click the .ahk file and choose "Compile with options"
 
+* Hit the "Compile" button
+
 ### Building the installer
 * Clone the repository `git clone https://github.com/LiveEnhancementSuite/LESforWindows`
 
