@@ -24,8 +24,8 @@ DisableProgramGroupPage=yes
 UsedUserAreasWarning=no
 LicenseFile=LICENSE.txt
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
-;PrivilegesRequired=lowest
-PrivilegesRequiredOverridesAllowed=dialog
+PrivilegesRequired=lowest
+PrivilegesRequiredOverridesAllowed=commandline
 OutputBaseFilename=LiveEnhancementSuiteSetup-x64
 SetupIconFile=resources\blueico.ico
 Compression=lzma
