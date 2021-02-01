@@ -2,7 +2,7 @@
  * * * Compile_AHK SETTINGS BEGIN * * *
 
 [AHK2EXE]
-Exe_File=%In_Dir%\Live Enhancement Suite 1.3.2.exe
+Exe_File=%In_Dir%\Live Enhancement Suite.exe
 Compression=0
 No_UPX=1
 Created_Date=1
@@ -177,7 +177,7 @@ FileInstall, resources/piano2.png, %A_ScriptDir%/resources/piano2.png
 FileInstall, resources/pianoblack.png, %A_ScriptDir%/resources/pianoblack.png
 FileInstall, menuconfig.ini, %A_ScriptDir%/menuconfig.ini
 FileInstall, settings.ini, %A_ScriptDir%/settings.ini
-FileInstall, changelog.txt, %A_ScriptDir%/changelog.txt
+FileInstall, CHANGELOG.md, %A_ScriptDir%/CHANGELOG.md
 
 	MsgBox, 4, Live Enhancement Suite, Welcome to the Live Enhancement Suite!`nWould you like to add the Live Enhancement Suite to startup?`nIt won't do anything when you're not using Ableton Live.`n(This can be changed anytime)
 	IfMsgBox Yes
@@ -266,14 +266,15 @@ Outputvar :=  ;
 sleep, 10
 
 ; updating the changelog.txt file with the one included in the current package
+FileDelete, %A_ScriptDir%\CHANGELOG.md
 FileDelete, %A_ScriptDir%\changelog.txt
-FileInstall, changelog.txt, %A_ScriptDir%\changelog.txt
+FileInstall, CHANGELOG.md, %A_ScriptDir%\CHANGELOG.md
 
 ;-----------------------------------;
 ;		  reading Settings.ini		;
 ;-----------------------------------;
 
-; This next loop is the settings.ini "spell checker". As a lot of variables come from this text file. 
+; This next loop is the settings.ini "spell checker". As a lot of variables come from this text file.
 ; It's important that all of them are present in the correct way; otherwise AHK might misbehave or do stupid stuff.
 ; I didn't really know how to make this work as a function back then so I just copy pasted the different checks for each of the values.
 ; Contrary to what it looks like, these are not all the same; not every field requires a 1 or a 0
@@ -282,7 +283,7 @@ Loop, Read, %A_ScriptDir%\settings.ini
 
 	line := StrReplace(A_LoopReadLine, "`r", "")
 	line := StrReplace(line, "`n", "")
-	
+
 	if (RegExMatch(line, "autoadd\s=\s") != 0){
 	result := StrSplit(line, "=", A_Space)
 	if !(result[2] = 0 or result[2] = 1){
