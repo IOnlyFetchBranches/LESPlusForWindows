@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Live Enhancement Suite"
-#define MyAppVersion "0.1.3.0"
+#define MyAppVersion "0.1.3.2"
 #define MyAppPublisher "The Live Enhancement Suite Developers"
 #define MyAppURL "https://enhancementsuite.me/"
 #define MyAppExeName "Live Enhancement Suite.exe"
@@ -27,7 +27,7 @@ LicenseFile=LICENSE.txt
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 OutputBaseFilename=LiveEnhancementSuiteSetup-x64
-SetupIconFile=resources\les_icon.ico
+SetupIconFile=resources\blueico.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
