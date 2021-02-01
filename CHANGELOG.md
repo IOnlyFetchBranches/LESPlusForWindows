@@ -54,9 +54,9 @@
 
 * Changed default settings
   	- Resettobrowserbookmark is now off by default
-   
+  
    - Added the ability to change the piano roll macro, courtesy of my German friends
-    Removed a bunch more old junk testing code
+      Removed a bunch more old junk testing code
 
 * "Generators" are now called "Instruments" in the default menuconfig
 
@@ -162,15 +162,15 @@ Added a check adn a warning for when you're running Ableton Live as an Administr
 * Project time tracker! Les will now track how much time you spend on a project. To check out how much time you've spent, simple click "Project Time" in the tray.
   	  	- The project time tracker only clocks your time when you're actively using Live. Time spent browsing reddit in your browser is not going to add up to the talley :)
    - Though, if you want the timer to cut you some slack, you can disable "Strict Time" in the tray.
-  	  	- Rewrite of the settings.ini parser. It's now faster and less prone to telling you to reset randomly
-    	     - Fixed a bug where holding shift while middle clicking would block all keyboard input until restart
+    	  	- Rewrite of the settings.ini parser. It's now faster and less prone to telling you to reset randomly
+            	     - Fixed a bug where holding shift while middle clicking would block all keyboard input until restart
      - Fixed a bug where LES would click on a random spot
      - Fixed a bug where the changelog wouldn't properly update
      - Fixed a bug where divider lines would duplicate
    - Massively improved performance on the Cmd + Alt + S shortcut, don't blink!
-  	  	- Two new shortcuts  (just don't use these on groups!):
-    	    	  	- Press Alt + X while hovering over a track (or multiple selected tracks) to clear its playlist contents.
-      	  
+    	  	- Two new shortcuts  (just don't use these on groups!):
+            	    	  	- Press Alt + X while hovering over a track (or multiple selected tracks) to clear its playlist contents.
+         
   - Press Alt + C while hovering over a track to recolour the track's clips.
 
 ## Release 1.2.1
@@ -272,15 +272,12 @@ Added a check adn a warning for when you're running Ableton Live as an Administr
 * fixed a bug where hitting "strict time" would add a check the wrong menu item in the menubar menu
   the "strict time" setting is now stored across reloads.
 * the bookmark feature now works in windowed mode
-
 * Added Buplicate!
   * Use Cmd + B to duplicate something 7 times! Press Ctrl + B again on the same element duplicate again 8 times!
   * Quickly duplicate an initial single clip in blocks of Eight
   * It's more useful than you'd think
-
 * Cmd + can be used to toggle LES functionality on and off with ease.
   - you can toggle LES off if a VST shortcut is conflicting with something else you want to do
-
 * it's time for VST specific shortcuts!
   * Xfer Serum:
     	- use the 1,2,3 and 4 key to switch tabs between osc, fx, matrix and global respectively.
@@ -295,7 +292,27 @@ Added a check adn a warning for when you're running Ableton Live as an Administr
     	- use the 1 and 2 keys to switch between A and B tabs. (Although it's a toggle so you can also just hit 1 constantly)
   * Massive:
     	- Use keys 1 through 5 to mute and unmute oscillators 1 through 5 (this includes PM/RM and noise)
-
 * VST specific shortcuts can be toggled on and off in the settings.
 * Cmd + 1 can be used to toggle LES functionality on and off with ease.
 * You can toggle LES off if a VST shortcut is conflicting with something else you want to do
+
+## Release 1.3.2
+
+* Depeicated the vst shortcuts bound to the number keys.
+* Added a button to install InsertWhere, a M4L companion plugin that changes where plugins are inserted. (Thank you Mat Zo!)
+  * Hit the "Install InsertWhere" to extract the plugin.
+  * To use InsertWhere, place the plugin on your master channel. It will now change the location where plugins are auto inserted.
+  * If the location is set to "right", plugins will be autoinserted to the right of the one you have selected, rather than at the end.
+  * Set insertwhere to "end" to mimmick default behavior.
+  * Insertwhere's buttons can be keymapped, and the included oscillator can be used to hear which setting it is currently set to, without looking at the UI.	
+
+If you want to use InsertWhere on a Mac, please click [here](https://cdn.discordapp.com/attachments/202817364264222720/805140617289138176/InsertWhere.amxd)
+
+* Attempted to fix a problem where the mouse would get stuck on middle click to pan. Let me know how that *pans* out.
+* Fixed a problem where alt+x cleartracks would not work right on the new Live 11 Beta (thank you bmason12149!)
+* Implemented a function in settings.ini where you can switch the fucntions of shift + tab and tab around. (thank you bmason12149!)
+* Fixed a problem where sometimes user input would get locked up when using Ctrl+Alt+S 
+* Added some extra notes to menuconfig.ini
+* Added a warning that annoys people into not running LES from within a few protected system directories.
+* Improved some phrasing in dialog boxes
+* Made the "Save File As" dialog close automatically after deciding to not save an untitled project as a new file
