@@ -21,7 +21,7 @@ The Live Enhancement Suite is a self-managing compiled [AutoHotKey](https://www.
 ## Sounds cool, how can I help?
 
 * Read our [Code of Conduct](https://github.com/LiveEnhancementSuite/LESforMacOS/blob/master/CODE_OF_CONDUCT.md) and get started contributing to the Live Enhancement Suite
-* Dig your pennies from the couch and help fund the development of LES with [PayPal](https://paypal.me/enhancementsuite)
+* Dig some pennies from the couch and help fund the development of LES with [PayPal](https://paypal.me/enhancementsuite)
 
 ## How do I build this thing?
 
