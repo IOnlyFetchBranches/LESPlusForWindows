@@ -36,10 +36,10 @@ The Live Enhancement Suite is a self-managing compiled [AutoHotKey](https://www.
 
   ***Sidenote: If you are trying to debug the LiveEnhancementSuite script, you may run it as a normal AutoHotKey script, building is generally reserved for releases***
 
-### Building with CompileAHK gui
+### Building with CompileAHK GUI
 * Clone the repository `git clone https://github.com/LiveEnhancementSuite/LESforWindows`
 
-* Download CompileAHK's gui here: https://github.com/mercury233/compile-ahk
+* Download CompileAHK's GUI here: https://github.com/mercury233/compile-ahk
 
 * Once installed, simply right click the .ahk file and choose "Compile with options"
 
