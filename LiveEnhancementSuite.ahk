@@ -1557,7 +1557,7 @@ WinGetTitle, WinTitle, ahk_id %guideUnderCursor%
 if(InStr(WinTitle, "Ableton Live 11") != 0){
 	Click, Right
 	sleep, 20
-	SendInput {up 9}{enter}
+	SendInput {up 1}{down 13}{enter}
 	sleep, 5
 	sendinput {delete}
 }
