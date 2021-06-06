@@ -316,3 +316,9 @@ If you want to use InsertWhere on a Mac, please click [here](https://cdn.discord
 * Added a warning that annoys people into not running LES from within a few protected system directories.
 * Improved some phrasing in dialog boxes
 * Made the "Save File As" dialog close automatically after deciding to not save an untitled project as a new file
+
+## Release 1.3.3
+
+* Added shortcuts for Freezing (alt + F) and Flattening tracks (alt + shift + F) 
+* Small fix for Quick Marker on different live versions
+* Removed a tray flair thing that celebrates the 1.2 release since we're on 1.3 by now

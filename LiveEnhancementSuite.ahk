@@ -10,7 +10,7 @@ Created_Date=1
 Set_Version_Info=1
 Company_Name=Inverted Silence & Dylan Tallchief
 File_Description=Live Enhancement Suite
-File_Version=0.1.3.2
+File_Version=0.1.3.3
 Inc_File_Version=0
 Internal_Name=Live Enhancement Suite
 Legal_Copyright=© 2019
@@ -32,11 +32,13 @@ Icon_5=%In_Dir%\resources\redico.ico
 
 ; Ok so, just to mentally prepare you: this source code is a complete mess. 
 ; I only really got into programming while writing this, so there's just dumb stuff happening all over.
-; Live Enhancement Suite for windows was my first programming project, and you'll especially be able to see that the sections I wrote first. 
+; Live Enhancement Suite for windows was my first programming project, and you'll especially be able to see that in the sections I wrote first. 
 ; They are the absolute worst to read.
 ; My apologies in advance.
 
 ; If you want to see organized code, look at the mac rewrite... But this?? nahhhhhhhhhhhhh
+; Yet, I still use this version every day- since I'm a Windows user myself.
+; That is to say, we're in this together >:-D
 
 
 ;-----------------------------------;
@@ -114,12 +116,9 @@ if (randomgen = 10){
 Menu, Tray, Tip, Live Sweet
 }
 if (randomgen = 11){
-Menu, Tray, Tip, 1`.2`, Yahoo!
-}
-if (randomgen = 12){
 Menu, Tray, Tip, Ableton Gratis Saus
 }
-if (randomgen = 13){
+if (randomgen = 12){
 Menu, Tray, Tip, The biggest thing since sliced bread
 }
 randomgen := ;
@@ -679,6 +678,10 @@ Hotkey, ^!w, closeall
 Hotkey, ^b, buplicate
 
 Hotkey, ^+h, directshyper
+;Hotkey, !g, debugshortcut
+
+Hotkey, !f, freezetrack
+Hotkey, !+f, flattentrack
 
 if (fliptabfunction = 1) {
 	Hotkey, Tab, PianoRoll
@@ -1531,13 +1534,16 @@ gosub, VSTredo
 Return
 
 quickmarker:
-WinGetActiveTitle, wintitleoutput
-if !(InStr(title, "Live 9", CaseSensitive := false) = 0){
-WinMenuSelectItem,,, 3&, 13&
-}
-Else{
-WinMenuSelectItem,,, 3&, 14&
-}
+;WinGetActiveTitle, wintitleoutput
+;msgbox, % wintitleoutput
+WinmenuSelectItem,,, Create, Add Locator
+return
+
+freezetrack:
+WinmenuSelectItem,,, Edit, Freeze Track
+return
+flattentrack:
+WinmenuSelectItem,,, Edit, Flatten Track
 return
 
 colortracks:
