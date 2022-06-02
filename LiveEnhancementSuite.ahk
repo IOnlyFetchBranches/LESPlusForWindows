@@ -1536,9 +1536,22 @@ gosub, VSTredo
 Return
 
 quickmarker:
-;WinGetActiveTitle, wintitleoutput
-;msgbox, % wintitleoutput
+WinGetActiveTitle, wintitleoutput
+if !(InStr(wintitleoutput, "Live 9", CaseSensitive := false) = 0){
+WinMenuSelectItem,,, 3&, 13&
+}
+Else if !(InStr(wintitleoutput, "Live 10", CaseSensitive := false) = 0){
+WinMenuSelectItem,,, 3&, 14&
+}
+Else if !(InStr(wintitleoutput, "Live 11", CaseSensitive := false) = 0){
+WinMenuSelectItem,,, 3&, 20&
+; WinMenuSelectItem,,, 3&, 15& (this actually crashes live)
+}
+Else {
 WinmenuSelectItem,,, Create, Add Locator
+}
+return
+
 return
 
 freezetrack:
