@@ -1555,10 +1555,20 @@ return
 return
 
 freezetrack:
-WinmenuSelectItem,,, Edit, Freeze Track
+if !(InStr(wintitleoutput, "Live 11", CaseSensitive := false) = 0){
+	WinmenuSelectItem,,, 2&, 28&
+}
+else {
+	WinmenuSelectItem,,, Edit, Freeze Track
+}
 return
 flattentrack:
-WinmenuSelectItem,,, Edit, Flatten Track
+if !(InStr(wintitleoutput, "Live 11", CaseSensitive := false) = 0){
+	WinmenuSelectItem,,, 2&, 29&
+}
+else {
+	WinmenuSelectItem,,, Edit, Flatten Track
+}
 return
 
 colortracks:
