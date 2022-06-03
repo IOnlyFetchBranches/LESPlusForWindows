@@ -22,6 +22,8 @@ jobs:
     - name: Install Inno Setup 6.0.4 for Installer Creation
       run: |
         powershell.exe ls
+        powershell.exe ls .\AutoHotKey
+        powershell.exe ls .\AutoHotKey\Compiler
         powershell.exe curl http://files.jrsoftware.org/is/6/innosetup-6.0.4.exe -o innosetup-6.0.4.exe
         ./innosetup-6.0.4.exe /VERYSILENT /SUPPRESSMSGBOXES
     - name: Run Inno Setup script to generate installer
