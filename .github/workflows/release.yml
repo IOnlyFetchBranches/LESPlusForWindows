@@ -13,13 +13,19 @@ jobs:
       uses: actions/checkout@v2
     - name: Download and extract AutoHotKey
       run: |
-        curl https://autohotkey.com/download/ahk.zip -o ahk.zip
-        powershell.exe -nologo -noprofile -command "& { Add-Type -A 'System.IO.Compression.FileSystem'; [IO.Compression.ZipFile]::ExtractToDirectory('ahk.zip', 'AutoHotKey'); }"
+        powershell.exe curl https://autohotkey.com/download/ahk.zip -o ahk.zip
+        powershell.exe Expand-Archive -Path ahk.zip -DestinationPath .\AutoHotKey\ -Verbose
+        powershell.exe ls
+        powershell.exe ls .\AutoHotKey
+        powershell.exe ls .\AutoHotKey\Compiler
     - name: Run AutoHotKey compiler to generate binary
       run:  .\AutoHotKey\Compiler\Ahk2Exe.exe /in LiveEnhancementSuite.ahk /out "Live Enhancement Suite.exe" /icon resources\blueico.ico
     - name: Install Inno Setup 6.0.4 for Installer Creation
       run: |
-        curl http://files.jrsoftware.org/is/6/innosetup-6.0.4.exe -o innosetup-6.0.4.exe
+        powershell.exe ls
+        powershell.exe ls .\AutoHotKey
+        powershell.exe ls .\AutoHotKey\Compiler
+        powershell.exe curl http://files.jrsoftware.org/is/6/innosetup-6.0.4.exe -o innosetup-6.0.4.exe
         ./innosetup-6.0.4.exe /VERYSILENT /SUPPRESSMSGBOXES
     - name: Run Inno Setup script and generate checksums
       run: |
