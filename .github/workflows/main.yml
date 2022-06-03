@@ -21,7 +21,7 @@ jobs:
       run:  .\AutoHotKey\Compiler\Ahk2Exe.exe /in LiveEnhancementSuite.ahk /out "Live Enhancement Suite.exe" /icon resources\blueico.ico
     - name: Install Inno Setup 6.0.4 for Installer Creation
       run: |
-        curl http://files.jrsoftware.org/is/6/innosetup-6.0.4.exe -o innosetup-6.0.4.exe
+        powershell.exe curl http://files.jrsoftware.org/is/6/innosetup-6.0.4.exe -o innosetup-6.0.4.exe
         ./innosetup-6.0.4.exe /VERYSILENT /SUPPRESSMSGBOXES
     - name: Run Inno Setup script to generate installer
       run: |
