@@ -27,8 +27,8 @@ LicenseFile=LICENSE.txt
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=commandline
-OutputBaseFilename=LiveEnhancementSuiteplusSetup-x64
-SetupIconFile=resources\blueico.ico
+OutputBaseFilename=LiveEnhancementSuitePslusSetup-x64
+SetupIconFile=resources\les_icon.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
