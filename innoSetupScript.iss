@@ -44,6 +44,7 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 
 [Files]
 Source: "Live Enhancement Suite Plus.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\resources\*.*"; DestDir: "{app}\resources"; Flags: recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
