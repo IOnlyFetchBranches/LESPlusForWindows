@@ -91,7 +91,7 @@ if (randomgen = 2){
 Menu, Tray, Tip, Super Live Bros: Lost Levels
 }
 if (randomgen = 3){
-Menu, Tray, Tip, LES is more
+Menu, Tray, Tip, LES Plus is more
 }
 if (randomgen = 4){
 Menu, Tray, Tip, Live HD Audio Manager
@@ -148,18 +148,18 @@ If !(InStr(FileExist("resources"), "D")){ ;if the resources folder doesn't exist
 Loop, %A_ScriptDir%\*.*,1,1
 If (A_Index > 3)
 {
-MsgBox,48,Live Enhancement Suite, % "You have placed LES in a directory that contains other files.`n LES will create new files when used for the first time.`n Please move the program to a dedicated directory."
+MsgBox,48,Live Enhancement Suite, % "You have placed LES+ in a directory that contains other files.`n LES+ will create new files when used for the first time.`n Please move the program to a dedicated directory."
 exitapp
 }
 }
 
 if InStr(splitPath A_ScriptDir, "Windows\Temp") or InStr(splitPath A_ScriptDir, "\AppData\Local\Temp"){
-MsgBox,48,Live Enhancement Suite, % "You executed LES from within your file extraction software.`nThis placed it inside of a temporary cache folder, which will cause it to be deleted by Windows' cleanup routine.`nPlease extract LES into its own folder before proceeding."
+MsgBox,48,Live Enhancement Suite, % "You executed LES++ from within your file extraction software.`nThis placed it inside of a temporary cache folder, which will cause it to be deleted by Windows' cleanup routine.`nPlease extract LES+ into its own folder before proceeding."
 exitapp
 }
 
 if (instr(A_ScriptDir, "C:\Program Files") != 0) or (instr(A_ScriptDir, "C:\Program Files (x86)") != 0){
-	MsgBox,4,Live Enhancement Suite, % "You may have executed LES from within a system folder.`nThis may cause LES to not function properly, as it will not have enough permissions to self-extract in this location.`nAre you sure you want to install LES in this location?`nPlease move this foder to another location to remove this warning."
+	MsgBox,4,Live Enhancement Suite, % "You may have executed LES+ from within a system folder.`nThis may cause LES+ to not function properly, as it will not have enough permissions to self-extract in this location.`nAre you sure you want to install LES+ in this location?`nPlease move this foder to another location to remove this warning."
 	IfMsgBox No
 		{
 		exitapp
@@ -547,10 +547,10 @@ gosub, settingsinibad
 ; In case you're wondering; missing variables default to a "false" response in AHK - so none of the features with missing settings.ini entries will work until you add them to the file.
 
 ; I never bothered to make a dynamic settings.ini file updater. Or some UI thing that would make this entire process more convoluted.
-; Things like LES 1.2 and 1.3 were never supposed to happen so I didn't account for them - these are the crappy workarounds.
+; Things like LES+ 1.2 and 1.3 were never supposed to happen so I didn't account for them - these are the crappy workarounds.
 
 if ((dynamicreload = "") or (altgrmarker = "") or (enableclosewindow = "") or (vstshortcuts = "") or (scrollspeed = "") or (fliptabfunction = ""))
-Msgbox, 4, Oops!, % "It seems your settings.ini file is from an older version of LES.`nYou won't be able to use some of the new features added to the settings without restoring your settings.ini file to its default state. It is recommended you make a backup before you do. This won't reset your menu. Reset settings?"
+Msgbox, 4, Oops!, % "It seems your settings.ini file is from an older version of LES+.`nYou won't be able to use some of the new features added to the settings without restoring your settings.ini file to its default state. It is recommended you make a backup before you do. This won't reset your menu. Reset settings?"
 IfMsgBox Yes
 	{
 	FileDelete, %A_ScriptDir%\settings.ini
@@ -940,11 +940,11 @@ pause::
 ^F1::
     Suspend, Permit
 	if (A_IsPaused = 1){
-		;traytip, "Live Enhancement Suite", "LES is unpaused", 0.1, 16
+		;traytip, "Live Enhancement Suite", "LES+ is unpaused", 0.1, 16
 		Menu, Tray, Rename, Unpause && Unsuspend, Pause && Suspend
 	}
 	Else{
-		;traytip, "Live Enhancement Suite", "LES is paused", 0.1, 16
+		;traytip, "Live Enhancement Suite", "LES+ is paused", 0.1, 16
 		Menu, Tray, Rename, Pause && Suspend, Unpause && Unsuspend
 	}
     Pause, Toggle, 1
@@ -957,7 +957,7 @@ Return
 
 ; Below here is the function that interprets the stuff inside of the menuconfig.ini file and turns it into a functional autohotkey menu.
 
-; I made up the LES menu syntax improve accessibility. In hindsight I could've done some things better, but it's too late for that now.
+; I made up the LES+ menu syntax improve accessibility. In hindsight I could've done some things better, but it's too late for that now.
 ; If I ever decide to overhaul this (or if someone else does), I would try to make a converter that can convert people's old configurations into a new syntax, along with the update.
 ; Seriously, I've seen people add a thousand items. That must take for ever...
 
@@ -1199,7 +1199,7 @@ Else{
 goto, skipautoadd
 }
 MouseGetPos, posX, posY
-If (resetbrowsertobookmark = 1){ ;this is a feature barely anyone uses, but you can have LES click a collection or something after you hit a menu item.
+If (resetbrowsertobookmark = 1){ ;this is a feature barely anyone uses, but you can have LES+ click a collection or something after you hit a menu item.
 	SetTitleMatchMode, 2
 	WinGetPos, wx, wy, wWidth, wHeight, Ableton
 	CoordMode, Pixel, Screen
@@ -1348,10 +1348,10 @@ ChangeAutoAddDelay:
     MsgBox, 64, Success, AutoAdd Delay updated to %autoadd_delay% ms.
 return
 InsertWhere:
-Msgbox, 4, Live Enhancement Suite, % "InsertWhere is a Max For Live companion device developed by Mat Zo.`nInsertWhere allows you to change the position where plugins are autoinserted after using the LES plugin menu.`nOnce loaded, it will allow you to switch between these settings:`n`n - Autoadd plugins before the one you have selected`n - Autoadd plugins after the the one you have selected`n - Always autoadd plugins at the end of the chain like normal.`n`nTo activate InsertWhere, place a single instance of the device on the master channel in your project and choose your desired setting.`n`nDo you want to install the InsertWhere M4L plugin?"
+Msgbox, 4, Live Enhancement Suite, % "InsertWhere is a Max For Live companion device developed by Mat Zo.`nInsertWhere allows you to change the position where plugins are autoinserted after using the LES+ plugin menu.`nOnce loaded, it will allow you to switch between these settings:`n`n - Autoadd plugins before the one you have selected`n - Autoadd plugins after the the one you have selected`n - Always autoadd plugins at the end of the chain like normal.`n`nTo activate InsertWhere, place a single instance of the device on the master channel in your project and choose your desired setting.`n`nDo you want to install the InsertWhere M4L plugin?"
 IfMsgBox Yes
 {
-	Msgbox, 64, Live Enhancement Suite, % "Please select the location where you want LES to extract the InsertWhere companion plugin.`n`nRecommended: Ableton User Library"
+	Msgbox, 64, Live Enhancement Suite, % "Please select the location where you want LES+ to extract the InsertWhere companion plugin.`n`nRecommended: Ableton User Library"
 	FileSelectFile, userlibrary, S, C:\Users\%A_UserName%\Documents\Ableton\User Library\InsertWhere.amxd
 	if (userlibrary = ""){
 		return
@@ -1380,7 +1380,7 @@ Return
 
 readme:
 SoundPlay, %A_ScriptDir%\resources\readmejingle.wav
-MsgBox, 0, Readme, % "Welcome to the Live Enhancement Suite created by @InvertedSilence & @DylanTallchief 🐦`nDouble right click to open up the custom plug-in menu.`nClick on the LES logo in the menu bar to add your own plug-ins, change settings, and read our manual if you're confused.`nHappy producing : )"
+MsgBox, 0, Readme, % "Welcome to the Live Enhancement Suite created by @InvertedSilence & @DylanTallchief 🐦`nDouble right click to open up the custom plug-in menu.`nClick on the LES+ logo in the menu bar to add your own plug-ins, change settings, and read our manual if you're confused.`nHappy producing : )"
 Return
 
 ;-----------------------------------;
@@ -2567,7 +2567,7 @@ SetTitleMatchMode, 2
 WinWaitActive, Ableton
 winget, ProcessID, PID, A
 if !(hProcess := DllCall("OpenProcess", "uint", 0x0400, "int", 0, "uint", ProcessID, "ptr")){
-    MsgBox, 0, Live Enhancement Suite Admin Warning, % "Hey there!`n`nIt seems you're running Ableton Live as an Administrator, and this might prevent LES from doing anything. Please run Ableton Live without elevated permissions (since it allows you to import files from your desktop etc).`nIf you have a good reason to run Ableton Live as an Admin, please run LES as an Administrator as well, this way things will work as intended.`n`n(This notification will only show up once)"
+    MsgBox, 0, Live Enhancement Suite Admin Warning, % "Hey there!`n`nIt seems you're running Ableton Live as an Administrator, and this might prevent LES+ from doing anything. Please run Ableton Live without elevated permissions (since it allows you to import files from your desktop etc).`nIf you have a good reason to run Ableton Live as an Admin, please run LES+ as an Administrator as well, this way things will work as intended.`n`n(This notification will only show up once)"
 }
 Traytip, Live Enhancement Suite, Double right click anywhere in Live to bring up custom menus!, 5
 SetTimer, tooltipboi, Delete
