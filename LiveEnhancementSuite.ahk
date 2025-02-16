@@ -72,10 +72,11 @@ Menu, Tray, Add, Configure Settings, settingsini
 Menu, Tray, Add, Configure Menu, menuini
 Menu, Tray, Add, Set Auto Add Delay, ChangeAutoAddDelay
 Menu, Tray, Add,
+Menu, Tray, Add,
 Menu, Tray, Add, Strict Time, stricttime
 Menu, Tray, Add, Check Project Time 🕒, requesttime
 Menu, Tray, Add,
-Menu, Tray, Add,
+Menu, Tray, Add, Listen/Support Me? 🥺, cupsypls
 Menu, Tray, Add, Install InsertWhere, InsertWhere
 Menu, Tray, Add, Manual 📖, Manual
 Menu, Tray, Add, Exit ❌, quitnow
@@ -1366,8 +1367,8 @@ manual:
 run, https://docs.enhancementsuite.me/
 Return
 
-monatpls: ;please gib monat
-run, https://paypal.me/enhancementsuite
+cupsypls: ;please check out my music :(
+run, https://linktr.ee/itscupsy
 Return
 
 quitnow:
