@@ -2,27 +2,27 @@
  * * * Compile_AHK SETTINGS BEGIN * * *
 
 [AHK2EXE]
-Exe_File=%In_Dir%\Live Enhancement Suite.exe
+Exe_File=%In_Dir%\Live Enhancement Suite Plus.exe
 Compression=0
 No_UPX=1
 Created_Date=1
 [VERSION]
 Set_Version_Info=1
-Company_Name=Inverted Silence & Dylan Tallchief
-File_Description=Live Enhancement Suite
-File_Version=0.1.3.3
+Company_Name=IOnlyFetchBranches (Formerly Inverted Silence & Dylan Tallchief)
+File_Description=Live Enhancement Suite Plus
+File_Version=0.1.4.0
 Inc_File_Version=0
-Internal_Name=Live Enhancement Suite
-Legal_Copyright=© 2019
-Original_Filename=Live Enhancement Suite
-Product_Name=Live Enhancement Suite
-Product_Version=0.1.3.2
+Internal_Name=Live Enhancement Suite Plus
+Legal_Copyright=© 2025
+Original_Filename=Live Enhancement Suite Plus
+Product_Name=Live Enhancement Suite Plus
+Product_Version=0.1.4.0
 [ICONS]
-Icon_1=%In_Dir%\resources\blueico.ico
-Icon_2=%In_Dir%\resources\blueico.ico
-Icon_3=%In_Dir%\resources\redico.ico
-Icon_4=%In_Dir%\resources\redico.ico
-Icon_5=%In_Dir%\resources\redico.ico
+Icon_1=%In_Dir%\resources\les_icon.ico
+Icon_2=%In_Dir%\resources\logos\Icon16@3x.ico
+Icon_3=%In_Dir%\resources\Icon16@3x.ico
+Icon_4=%In_Dir%\resources\Icon16@3x.ico
+Icon_5=%In_Dir%\resources\Icon16@3x.ico
 
 * * * Compile_AHK SETTINGS END * * *
 */
@@ -68,6 +68,7 @@ OnExit, exitfunc
 
 ;this sets up the tray menu
 Menu, Tray, NoStandard
+Menu, Tray, Icon, %A_ScriptDir%\resources\les_icon.ico
 Menu, Tray, Add, Configure Settings, settingsini
 Menu, Tray, Add, Configure Menu, menuini
 Menu, Tray, Add, Set Auto Add Delay, ChangeAutoAddDelay
@@ -170,6 +171,8 @@ if (instr(A_ScriptDir, "C:\Program Files") != 0) or (instr(A_ScriptDir, "C:\Prog
 ;this part of the code extracts a bunch of resources from the .exe and puts them in the right spot
 FileCreateDir, resources
 
+FileInstall, resources/logos/Icon16@3x.ico, %A_ScriptDir%/resources/Icon16@3x.ico
+FileInstall, resources/les_icon.ico, %A_ScriptDir%/resources/les_icon.ico
 FileInstall, resources/readmejingle.wav, %A_ScriptDir%/resources/readmejingle.wav
 FileInstall, resources/piano.png, %A_ScriptDir%/resources/piano.png
 FileInstall, resources/piano2.png, %A_ScriptDir%/resources/piano2.png
