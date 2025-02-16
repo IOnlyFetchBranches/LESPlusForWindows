@@ -70,8 +70,7 @@ OnExit, exitfunc
 Menu, Tray, NoStandard
 Menu, Tray, Add, Configure Settings, settingsini
 Menu, Tray, Add, Configure Menu, menuini
-Menu, Tray, Add,
-Menu, Tray, Add, Donate 💲, monatpls
+Menu, Tray, Add, Set Auto Add Delay, ChangeAutoAddDelay
 Menu, Tray, Add,
 Menu, Tray, Add, Strict Time, stricttime
 Menu, Tray, Add, Check Project Time 🕒, requesttime
@@ -268,6 +267,8 @@ sleep, 10
 FileDelete, %A_ScriptDir%\CHANGELOG.md
 FileDelete, %A_ScriptDir%\changelog.txt
 FileInstall, CHANGELOG.md, %A_ScriptDir%\CHANGELOG.md
+; auto add delay variable.
+global autoadd_delay := 150  ; Default value for AUTO ADD
 
 ;-----------------------------------;
 ;		  reading Settings.ini		;
@@ -292,6 +293,16 @@ Loop, Read, %A_ScriptDir%\settings.ini
 		}
 	autoadd := result[2]
 	}
+
+	if (RegExMatch(line, "autoadd_delay\s=\s") != 0){
+        result := StrSplit(line, "=", A_Space)
+        if !(RegExReplace(result[2], "[0-9]") = ""){
+            msgbox % "Invalid parameter for " . Chr(34) "autoadd_delay" . Chr(34) . ": the specified parameter is not a number."
+            run, %A_ScriptDir%\settings.ini
+            exitapp
+        }
+        autoadd_delay := result[2]
+    }
 	
 	if (RegExMatch(line, "resetbrowsertobookmark\s=\s") != 0){
 	result := StrSplit(line, "=", A_Space)
@@ -793,6 +804,7 @@ Menu, Scales, Add, Chromaitc, :Chromatic
 skipnormalscales:
 }
 
+
 ;-----------------------------------;
 ;		  Double right click routine		;
 ;-----------------------------------;
@@ -1178,8 +1190,10 @@ tempautoadd := autoadd
 
 
 If (tempautoadd = 1){
-sleep, 112
-Send,{down}{enter}
+sleep, %autoadd_delay%
+Send,{down}
+sleep, %autoadd_delay%
+Send,{enter}
 }
 Else{
 goto, skipautoadd
@@ -1306,7 +1320,33 @@ Menu, Tray, Rename, Pause && Suspend, Unpause && Unsuspend
 Suspend, Toggle
 Pause
 Return
+;setupChangeAutoAddDelay for variable.
+ChangeAutoAddDelay:
+    InputBox, userInput, Set AutoAdd Delay, Enter new delay in milliseconds (current: %autoadd_delay%), , 200, 150
+    if (userInput = "" or userInput = "Cancel") {
+        return
+    }
+    if userInput is not number
+    {
+        MsgBox, 16, Error, Please enter a valid number.
+        return
+    }
+    autoadd_delay := userInput
 
+    ; Update settings.ini
+    Loop, Read, %A_ScriptDir%\settings.ini, %A_ScriptDir%\settings_temp.ini
+    {
+        if (RegExMatch(A_LoopReadLine, "autoadd_delay\s=\s")) {
+            FileAppend, autoadd_delay = %autoadd_delay%`n, %A_ScriptDir%\settings_temp.ini
+        } else {
+            FileAppend, %A_LoopReadLine%`n, %A_ScriptDir%\settings_temp.ini
+        }
+    }
+    FileDelete, %A_ScriptDir%\settings.ini
+    FileMove, %A_ScriptDir%\settings_temp.ini, %A_ScriptDir%\settings.ini
+
+    MsgBox, 64, Success, AutoAdd Delay updated to %autoadd_delay% ms.
+return
 InsertWhere:
 Msgbox, 4, Live Enhancement Suite, % "InsertWhere is a Max For Live companion device developed by Mat Zo.`nInsertWhere allows you to change the position where plugins are autoinserted after using the LES plugin menu.`nOnce loaded, it will allow you to switch between these settings:`n`n - Autoadd plugins before the one you have selected`n - Autoadd plugins after the the one you have selected`n - Always autoadd plugins at the end of the chain like normal.`n`nTo activate InsertWhere, place a single instance of the device on the master channel in your project and choose your desired setting.`n`nDo you want to install the InsertWhere M4L plugin?"
 IfMsgBox Yes
