@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Live Enhancement Suite Plus"
-#define MyAppVersion "0.1.4.0"
+#define MyAppVersion "0.1.4.1"
 #define MyAppPublisher "The Live Enhancement Suite Developers"
 #define MyAppURL "https://linktr.ee/itscupsy"
 #define MyAppExeName "Live Enhancement Suite Plus.exe"
@@ -27,7 +27,7 @@ LicenseFile=LICENSE.txt
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=commandline
-OutputBaseFilename=LiveEnhancementSuitePslusSetup-x64
+OutputBaseFilename=LiveEnhancementSuitePlusSetup-x64
 SetupIconFile=resources\les_icon.ico
 Compression=lzma
 SolidCompression=yes
@@ -43,7 +43,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 6.1; Check: not IsAdminInstallMode
 
 [Files]
-Source: "Live Enhancement Suite Plus.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "LiveEnhancementSuite Plus.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\resources\*.*"; DestDir: "{app}\resources"; Flags: recursesubdirs createallsubdirs
 
 [Icons]

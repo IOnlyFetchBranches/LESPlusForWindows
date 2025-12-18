@@ -10,13 +10,13 @@ Created_Date=1
 Set_Version_Info=1
 Company_Name=IOnlyFetchBranches (Formerly Inverted Silence & Dylan Tallchief)
 File_Description=Live Enhancement Suite Plus
-File_Version=0.1.4.0
+File_Version=0.1.4.1
 Inc_File_Version=0
 Internal_Name=Live Enhancement Suite Plus
 Legal_Copyright=© 2025
 Original_Filename=Live Enhancement Suite Plus
 Product_Name=Live Enhancement Suite Plus
-Product_Version=0.1.4.0
+Product_Version=0.1.4.1
 [ICONS]
 Icon_1=%In_Dir%\resources\les_icon.ico
 Icon_2=%In_Dir%\resources\logos\Icon16@3x.ico
@@ -72,6 +72,7 @@ Menu, Tray, Icon, %A_ScriptDir%\resources\les_icon.ico
 Menu, Tray, Add, Configure Settings, settingsini
 Menu, Tray, Add, Configure Menu, menuini
 Menu, Tray, Add, Set Auto Add Delay, ChangeAutoAddDelay
+Menu, Tray, Add, Set Input Send Delay, ChangeInputSendDelay
 Menu, Tray, Add,
 Menu, Tray, Add,
 Menu, Tray, Add, Strict Time, stricttime
@@ -273,6 +274,7 @@ FileDelete, %A_ScriptDir%\changelog.txt
 FileInstall, CHANGELOG.md, %A_ScriptDir%\CHANGELOG.md
 ; auto add delay variable.
 global autoadd_delay := 150  ; Default value for AUTO ADD
+global inputsend_delay := 25 ; Default value for INPUT SEND DELAY
 
 ;-----------------------------------;
 ;		  reading Settings.ini		;
@@ -306,6 +308,16 @@ Loop, Read, %A_ScriptDir%\settings.ini
             exitapp
         }
         autoadd_delay := result[2]
+    }
+
+	if (RegExMatch(line, "inputsend_delay\s=\s") != 0){
+        result := StrSplit(line, "=", A_Space)
+        if !(RegExReplace(result[2], "[0-9]") = ""){
+            msgbox % "Invalid parameter for " . Chr(34) "inputsend_delay" . Chr(34) . ": the specified parameter is not a number."
+            run, %A_ScriptDir%\settings.ini
+            exitapp
+        }
+        inputsend_delay := result[2]
     }
 	
 	if (RegExMatch(line, "resetbrowsertobookmark\s=\s") != 0){
@@ -1171,6 +1183,7 @@ Return
 openplugin: ;you would think consistently typing something in the ableton search bar would be easy
 loop, 1{
 Send,{ctrl down}{f}{ctrl up}
+sleep, %inputsend_delay%
 Sendinput % queryname
 WinWaitActive, ExcludeText - ExcludeTitle, , 0.5 ; prevents the keystrokes from desynchronizing when ableton lags during the search query.
 
@@ -1350,6 +1363,32 @@ ChangeAutoAddDelay:
     FileMove, %A_ScriptDir%\settings_temp.ini, %A_ScriptDir%\settings.ini
 
     MsgBox, 64, Success, AutoAdd Delay updated to %autoadd_delay% ms.
+return
+ChangeInputSendDelay:
+    InputBox, userInput, Set Input Send Delay, Enter new delay in milliseconds (current: %inputsend_delay%), , 200, 150
+    if (userInput = "" or userInput = "Cancel") {
+        return
+    }
+    if userInput is not number
+    {
+        MsgBox, 16, Error, Please enter a valid number.
+        return
+    }
+    inputsend_delay := userInput
+
+    ; Update settings.ini
+    Loop, Read, %A_ScriptDir%\settings.ini, %A_ScriptDir%\settings_temp.ini
+    {
+        if (RegExMatch(A_LoopReadLine, "inputsend_delay\s=\s")) {
+            FileAppend, inputsend_delay = %inputsend_delay%`n, %A_ScriptDir%\settings_temp.ini
+        } else {
+            FileAppend, %A_LoopReadLine%`n, %A_ScriptDir%\settings_temp.ini
+        }
+    }
+    FileDelete, %A_ScriptDir%\settings.ini
+    FileMove, %A_ScriptDir%\settings_temp.ini, %A_ScriptDir%\settings.ini
+
+    MsgBox, 64, Success, Input Send Delay updated to %inputsend_delay% ms.
 return
 InsertWhere:
 Msgbox, 4, Live Enhancement Suite, % "InsertWhere is a Max For Live companion device developed by Mat Zo.`nInsertWhere allows you to change the position where plugins are autoinserted after using the LES+ plugin menu.`nOnce loaded, it will allow you to switch between these settings:`n`n - Autoadd plugins before the one you have selected`n - Autoadd plugins after the the one you have selected`n - Always autoadd plugins at the end of the chain like normal.`n`nTo activate InsertWhere, place a single instance of the device on the master channel in your project and choose your desired setting.`n`nDo you want to install the InsertWhere M4L plugin?"
