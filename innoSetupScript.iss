@@ -2,10 +2,10 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Live Enhancement Suite Plus"
-#define MyAppVersion "1.5.0"
+#define MyAppVersion "1.5.1"
 #define MyAppPublisher "The Live Enhancement Suite Developers"
 #define MyAppURL "https://linktr.ee/itscupsy"
-#define MyAppExeName "Live Enhancement Suite Plus.exe"
+#define MyAppExeName "LiveEnhancementSuite Plus.exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -43,7 +43,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 6.1; Check: not IsAdminInstallMode
 
 [Files]
-Source: "LiveEnhancementSuite Plus.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\resources\*.*"; DestDir: "{app}\resources"; Flags: recursesubdirs createallsubdirs
 
 [Icons]

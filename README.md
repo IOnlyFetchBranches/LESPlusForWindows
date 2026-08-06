@@ -20,6 +20,10 @@ This is the plus version, which has additional features such as dyamically adjus
 
 - Read our [Code of Conduct](https://github.com/LiveEnhancementSuite/LESforMacOS/blob/master/CODE_OF_CONDUCT.md) and get started contributing to the Live Enhancement Suite
 
+## Developer notes
+
+- Workflow Debug Mode playbook: [LESdev/workflow-debug-mode.md](LESdev/workflow-debug-mode.md)
+
 ## How do I build this thing?
 
 ## Binary asset warning (important)
