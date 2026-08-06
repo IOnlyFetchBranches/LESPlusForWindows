@@ -1667,26 +1667,57 @@ if (liveMainHwnd = ""){
 }
 quickMarkerResult := 0
 
-if !(InStr(wintitleoutput, "Live 9", CaseSensitive := false) = 0){
+if !(InStr(wintitleoutput, "Live 8", CaseSensitive := false) = 0){
+	WinMenuSelectItem, ahk_id %liveMainHwnd%,, 3&, 12&
+	quickMarkerResult := (ErrorLevel = 0)
+	if (quickMarkerResult = 0){
+		quickMarkerResult := TryAddLocatorFromCreateShortcut(liveMainHwnd, workflowdebug)
+	}
+	if (quickMarkerResult = 0){
+		quickMarkerResult := TryAddLocatorMenuFallbacks(liveMainHwnd, workflowdebug)
+	}
+}
+Else if !(InStr(wintitleoutput, "Live 9", CaseSensitive := false) = 0){
 	WinMenuSelectItem, ahk_id %liveMainHwnd%,, 3&, 13&
 	quickMarkerResult := (ErrorLevel = 0)
+	if (quickMarkerResult = 0){
+		quickMarkerResult := TryAddLocatorFromCreateShortcut(liveMainHwnd, workflowdebug)
+	}
+	if (quickMarkerResult = 0){
+		quickMarkerResult := TryAddLocatorMenuFallbacks(liveMainHwnd, workflowdebug)
+	}
 }
 Else if !(InStr(wintitleoutput, "Live 10", CaseSensitive := false) = 0){
 	WinMenuSelectItem, ahk_id %liveMainHwnd%,, 3&, 14&
 	quickMarkerResult := (ErrorLevel = 0)
+	if (quickMarkerResult = 0){
+		quickMarkerResult := TryAddLocatorFromCreateShortcut(liveMainHwnd, workflowdebug)
+	}
+	if (quickMarkerResult = 0){
+		quickMarkerResult := TryAddLocatorMenuFallbacks(liveMainHwnd, workflowdebug)
+	}
 }
 Else if !(InStr(wintitleoutput, "Live 11", CaseSensitive := false) = 0){
 	WinMenuSelectItem, ahk_id %liveMainHwnd%,, 3&, 20&
 	quickMarkerResult := (ErrorLevel = 0)
+	if (quickMarkerResult = 0){
+		quickMarkerResult := TryAddLocatorFromCreateShortcut(liveMainHwnd, workflowdebug)
+	}
 	if (quickMarkerResult = 0){
 		quickMarkerResult := TryAddLocatorMenuFallbacks(liveMainHwnd, workflowdebug)
 	}
 }
 Else if !(InStr(wintitleoutput, "Live 12", CaseSensitive := false) = 0){
 	quickMarkerResult := TryAddLocatorFromCreateShortcut(liveMainHwnd, workflowdebug)
+	if (quickMarkerResult = 0){
+		quickMarkerResult := TryAddLocatorMenuFallbacks(liveMainHwnd, workflowdebug)
+	}
 }
 Else{
+	quickMarkerResult := TryAddLocatorFromCreateShortcut(liveMainHwnd, workflowdebug)
+	if (quickMarkerResult = 0){
 	quickMarkerResult := TryAddLocatorMenuFallbacks(liveMainHwnd, workflowdebug)
+	}
 }
 
 if (quickMarkerResult = 0){
