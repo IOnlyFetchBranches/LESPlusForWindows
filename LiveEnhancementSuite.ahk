@@ -1665,60 +1665,9 @@ WinGet, liveMainHwnd, ID, ahk_exe Ableton Live.+
 if (liveMainHwnd = ""){
 	return
 }
-quickMarkerResult := 0
-
-if !(InStr(wintitleoutput, "Live 8", CaseSensitive := false) = 0){
-	WinMenuSelectItem, ahk_id %liveMainHwnd%,, 3&, 12&
-	quickMarkerResult := (ErrorLevel = 0)
-	if (quickMarkerResult = 0){
-		quickMarkerResult := TryAddLocatorFromCreateShortcut(liveMainHwnd, workflowdebug)
-	}
-	if (quickMarkerResult = 0){
-		quickMarkerResult := TryAddLocatorMenuFallbacks(liveMainHwnd, workflowdebug)
-	}
-}
-Else if !(InStr(wintitleoutput, "Live 9", CaseSensitive := false) = 0){
-	WinMenuSelectItem, ahk_id %liveMainHwnd%,, 3&, 13&
-	quickMarkerResult := (ErrorLevel = 0)
-	if (quickMarkerResult = 0){
-		quickMarkerResult := TryAddLocatorFromCreateShortcut(liveMainHwnd, workflowdebug)
-	}
-	if (quickMarkerResult = 0){
-		quickMarkerResult := TryAddLocatorMenuFallbacks(liveMainHwnd, workflowdebug)
-	}
-}
-Else if !(InStr(wintitleoutput, "Live 10", CaseSensitive := false) = 0){
-	WinMenuSelectItem, ahk_id %liveMainHwnd%,, 3&, 14&
-	quickMarkerResult := (ErrorLevel = 0)
-	if (quickMarkerResult = 0){
-		quickMarkerResult := TryAddLocatorFromCreateShortcut(liveMainHwnd, workflowdebug)
-	}
-	if (quickMarkerResult = 0){
-		quickMarkerResult := TryAddLocatorMenuFallbacks(liveMainHwnd, workflowdebug)
-	}
-}
-Else if !(InStr(wintitleoutput, "Live 11", CaseSensitive := false) = 0){
-	WinMenuSelectItem, ahk_id %liveMainHwnd%,, 3&, 20&
-	quickMarkerResult := (ErrorLevel = 0)
-	if (quickMarkerResult = 0){
-		quickMarkerResult := TryAddLocatorFromCreateShortcut(liveMainHwnd, workflowdebug)
-	}
-	if (quickMarkerResult = 0){
-		quickMarkerResult := TryAddLocatorMenuFallbacks(liveMainHwnd, workflowdebug)
-	}
-}
-Else if !(InStr(wintitleoutput, "Live 12", CaseSensitive := false) = 0){
-	quickMarkerResult := TryAddLocatorFromCreateShortcut(liveMainHwnd, workflowdebug)
-	if (quickMarkerResult = 0){
-		quickMarkerResult := TryAddLocatorMenuFallbacks(liveMainHwnd, workflowdebug)
-	}
-}
-Else{
-	quickMarkerResult := TryAddLocatorFromCreateShortcut(liveMainHwnd, workflowdebug)
-	if (quickMarkerResult = 0){
-	quickMarkerResult := TryAddLocatorMenuFallbacks(liveMainHwnd, workflowdebug)
-	}
-}
+; Keep quickmarker readable: detect version once, then run layered strategy.
+liveMajorVersion := GetLiveMajorVersion(wintitleoutput)
+quickMarkerResult := TryAddLocatorForLiveVersion(liveMainHwnd, liveMajorVersion, workflowdebug)
 
 if (quickMarkerResult = 0){
 	if (enabledebug = 1 or workflowdebug = 1){
@@ -1728,6 +1677,56 @@ if (quickMarkerResult = 0){
 return
 
 return
+
+GetLiveMajorVersion(windowTitle){
+	if !(InStr(windowTitle, "Live 12", CaseSensitive := false) = 0)
+		return 12
+	if !(InStr(windowTitle, "Live 11", CaseSensitive := false) = 0)
+		return 11
+	if !(InStr(windowTitle, "Live 10", CaseSensitive := false) = 0)
+		return 10
+	if !(InStr(windowTitle, "Live 9", CaseSensitive := false) = 0)
+		return 9
+	if !(InStr(windowTitle, "Live 8", CaseSensitive := false) = 0)
+		return 8
+	return 0
+}
+
+TryAddLocatorForLiveVersion(liveMainHwnd, liveMajorVersion, debugEnabled := 0){
+	quickMarkerResult := 0
+
+	; For older versions, try known numeric menu index first, then generic fallbacks.
+	if (liveMajorVersion = 8){
+		quickMarkerResult := TryAddLocatorNumericPath(liveMainHwnd, "3&", "12&", debugEnabled)
+	}
+	else if (liveMajorVersion = 9){
+		quickMarkerResult := TryAddLocatorNumericPath(liveMainHwnd, "3&", "13&", debugEnabled)
+	}
+	else if (liveMajorVersion = 10){
+		quickMarkerResult := TryAddLocatorNumericPath(liveMainHwnd, "3&", "14&", debugEnabled)
+	}
+	else if (liveMajorVersion = 11){
+		quickMarkerResult := TryAddLocatorNumericPath(liveMainHwnd, "3&", "20&", debugEnabled)
+	}
+
+	; Live 12 and unknown versions prioritize stable named menu lookup.
+	if (quickMarkerResult = 0){
+		quickMarkerResult := TryAddLocatorFromCreateShortcut(liveMainHwnd, debugEnabled)
+	}
+	if (quickMarkerResult = 0){
+		quickMarkerResult := TryAddLocatorMenuFallbacks(liveMainHwnd, debugEnabled)
+	}
+
+	return quickMarkerResult
+}
+
+TryAddLocatorNumericPath(liveMainHwnd, topLevelMenu, locatorItem, debugEnabled := 0){
+	if (debugEnabled = 1){
+		DebugStep("Locator: trying numeric path " . topLevelMenu . "," . locatorItem, 180)
+	}
+	WinMenuSelectItem, ahk_id %liveMainHwnd%,, %topLevelMenu%, %locatorItem%
+	return (ErrorLevel = 0)
+}
 
 TryAddLocatorFromCreateShortcut(liveMainHwnd, debugEnabled := 0){
 	if (debugEnabled = 1){
