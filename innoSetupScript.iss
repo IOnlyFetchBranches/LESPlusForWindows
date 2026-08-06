@@ -27,7 +27,7 @@ LicenseFile=LICENSE.txt
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=commandline
-OutputBaseFilename=LiveEnhancementSuitePlusSetup-x64
+OutputBaseFilename=LiveEnhancementSuitePlusSetup-{#MyAppVersion}-x64
 SetupIconFile=resources\les_icon.ico
 Compression=lzma
 SolidCompression=yes
@@ -43,7 +43,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 6.1; Check: not IsAdminInstallMode
 
 [Files]
-Source: "{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "Output\LiveEnhancementSuite-Plus-v{#MyAppVersion}.exe"; DestDir: "{app}"; DestName: "{#MyAppExeName}"; Flags: ignoreversion
 Source: ".\resources\*.*"; DestDir: "{app}\resources"; Flags: recursesubdirs createallsubdirs
 
 [Icons]
