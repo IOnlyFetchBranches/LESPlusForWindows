@@ -10,13 +10,13 @@ Created_Date=1
 Set_Version_Info=1
 Company_Name=IOnlyFetchBranches (Formerly Inverted Silence & Dylan Tallchief)
 File_Description=Live Enhancement Suite Plus
-File_Version=0.1.4.1
+File_Version=1.5.0
 Inc_File_Version=0
 Internal_Name=Live Enhancement Suite Plus
 Legal_Copyright=© 2025
 Original_Filename=Live Enhancement Suite Plus
 Product_Name=Live Enhancement Suite Plus
-Product_Version=0.1.4.1
+Product_Version=1.5.0
 [ICONS]
 Icon_1=%In_Dir%\resources\les_icon.ico
 Icon_2=%In_Dir%\resources\logos\Icon16@3x.ico
