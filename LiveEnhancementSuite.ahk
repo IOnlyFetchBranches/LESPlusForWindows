@@ -750,6 +750,7 @@ if(vstshortcuts = 1){
 
 	Hotkey, ^z, VSTundo
 	Hotkey, ^+z, SmartUndo
+	Hotkey, ^+y, SmartRedo
 }
 
 }
@@ -1926,6 +1927,43 @@ if (smartUndoResult = -1){
 	Return
 }
 MsgBox, 48, LES+ Smart Undo, % "ShaperBox 3 Undo was not found.`n`n" . smartUndoDebugMessage
+Return
+
+SmartRedo:
+WinGetTitle, wintitleoutput, A
+if (RegExMatch(wintitleoutput, "i)^ShaperBox\s*3(?:/|$)")){
+	gosub, SmartRedoShaperBox3
+	Return
+}
+if (WinActive("ahk_class AbletonVstPlugClass") or WinActive("ahk_class Vst3PlugWindow")){
+	MsgBox, 48, LES+ Smart Redo, % "Smart Redo is not supported for this plugin:`n" . wintitleoutput
+	Return
+}
+sendinput {ctrl down}{shift down}{y}{shift up}{ctrl up}
+Return
+
+SmartRedoShaperBox3:
+smartRedoImagePattern := A_ScriptDir . "\resources\img-refs\sb3\redo*.png"
+smartRedoClickBiasX := 0.50
+smartRedoClickBiasY := 0.50
+smartRedoScales := "100,90,110,80,120,70,130"
+smartRedoVariations := "30,45,60"
+smartRedoResult := TryImagePatternClickInActiveWindow(smartRedoImagePattern, smartRedoScales, smartRedoVariations, smartRedoClickBiasX, smartRedoClickBiasY, smartundodebug, smartRedoDebugMessage)
+if (smartRedoResult = 1){
+	if (smartundodebug = 1){
+		MsgBox, 64, LES+ Smart Redo Debug, % smartRedoDebugMessage
+	}
+	Return
+}
+if (smartRedoResult = -2){
+	MsgBox, 16, LES+ Smart Redo, % "No ShaperBox Redo image permutations found.`nExpected files: " . smartRedoImagePattern
+	Return
+}
+if (smartRedoResult = -1){
+	MsgBox, 16, LES+ Smart Redo, % "ShaperBox 3 Redo image could not be loaded for ImageSearch.`n`n" . smartRedoDebugMessage
+	Return
+}
+MsgBox, 48, LES+ Smart Redo, % "ShaperBox 3 Redo was not found.`n`n" . smartRedoDebugMessage
 Return
 
 SmartUndoHideDebugBox:
