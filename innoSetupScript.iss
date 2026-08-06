@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Live Enhancement Suite Plus"
-#define MyAppVersion "0.1.4.1"
+#define MyAppVersion "1.5.0"
 #define MyAppPublisher "The Live Enhancement Suite Developers"
 #define MyAppURL "https://linktr.ee/itscupsy"
 #define MyAppExeName "Live Enhancement Suite Plus.exe"

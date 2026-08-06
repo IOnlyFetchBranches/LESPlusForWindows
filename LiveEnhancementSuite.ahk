@@ -10,13 +10,13 @@ Created_Date=1
 Set_Version_Info=1
 Company_Name=IOnlyFetchBranches (Formerly Inverted Silence & Dylan Tallchief)
 File_Description=Live Enhancement Suite Plus
-File_Version=0.1.4.1
+File_Version=1.5.0
 Inc_File_Version=0
 Internal_Name=Live Enhancement Suite Plus
 Legal_Copyright=© 2025
 Original_Filename=Live Enhancement Suite Plus
 Product_Name=Live Enhancement Suite Plus
-Product_Version=0.1.4.1
+Product_Version=1.5.0
 [ICONS]
 Icon_1=%In_Dir%\resources\les_icon.ico
 Icon_2=%In_Dir%\resources\logos\Icon16@3x.ico
@@ -76,6 +76,7 @@ Menu, Tray, Add, Set Input Send Delay, ChangeInputSendDelay
 Menu, Tray, Add,
 Menu, Tray, Add,
 Menu, Tray, Add, Strict Time, stricttime
+Menu, Tray, Add, Smart Undo Debug, smartundodebugtoggle
 Menu, Tray, Add, Check Project Time 🕒, requesttime
 Menu, Tray, Add,
 Menu, Tray, Add, Listen/Support Me? 🥺, cupsypls
@@ -134,6 +135,19 @@ else{
 }
 if(stricttxt = 1){
 Menu, Tray, Check, Strict Time
+}
+
+FileRead, smartundodebugtxt, %A_ScriptDir%\resources\smartundo_debug.txt
+if(ErrorLevel = 1){
+	smartundodebug := 1
+	FileDelete, %A_ScriptDir%\resources\smartundo_debug.txt
+	FileAppend, 1, %A_ScriptDir%\resources\smartundo_debug.txt
+}
+else{
+	smartundodebug := smartundodebugtxt
+}
+if(smartundodebug = 1){
+	Menu, Tray, Check, Smart Undo Debug
 }
 
 ;-----------------------------------;
@@ -269,12 +283,14 @@ Outputvar :=  ;
 sleep, 10
 
 ; updating the changelog.txt file with the one included in the current package
-FileDelete, %A_ScriptDir%\CHANGELOG.md
-FileDelete, %A_ScriptDir%\changelog.txt
-FileInstall, CHANGELOG.md, %A_ScriptDir%\CHANGELOG.md
+if (A_IsCompiled){
+	FileDelete, %A_ScriptDir%\CHANGELOG.md
+	FileDelete, %A_ScriptDir%\changelog.txt
+	FileInstall, CHANGELOG.md, %A_ScriptDir%\CHANGELOG.md
+}
 ; auto add delay variable.
 global autoadd_delay := 150  ; Default value for AUTO ADD
-global inputsend_delay := 25 ; Default value for INPUT SEND DELAY
+global inputsend_delay := 100 ; Default value for INPUT SEND DELAY
 
 ;-----------------------------------;
 ;		  reading Settings.ini		;
@@ -676,7 +692,7 @@ Else{
 	}
 Hotkey, !e, envelopemode
 if (addctrlshiftz = 1){
-Hotkey, ^+z, redo
+Hotkey, ^y, redo
 }
 if (0todelete = 1){
 Hotkey, ~0, double0delet
@@ -733,7 +749,8 @@ if(vstshortcuts = 1){
 	}
 
 	Hotkey, ^z, VSTundo
-	Hotkey, ^y, VSTredo
+	Hotkey, ^+z, SmartUndo
+	Hotkey, ^+y, SmartRedo
 }
 
 }
@@ -1326,6 +1343,21 @@ if (WinExist("ahk_exe Ableton Live ") != 0) and (trackname != ""){
 }
 Return
 
+smartundodebugtoggle:
+if (smartundodebug = 0){
+	smartundodebug := 1
+	Menu, Tray, Check, Smart Undo Debug
+	FileDelete, %A_ScriptDir%\resources\smartundo_debug.txt
+	FileAppend, 1, %A_ScriptDir%\resources\smartundo_debug.txt
+}
+Else{
+	smartundodebug := 0
+	Menu, Tray, Uncheck, Smart Undo Debug
+	FileDelete, %A_ScriptDir%\resources\smartundo_debug.txt
+	FileAppend, 0, %A_ScriptDir%\resources\smartundo_debug.txt
+}
+Return
+
 freeze:
 if (A_IsPaused = 1){
 Menu, Tray, Rename, Unpause && Unsuspend, Pause && Suspend
@@ -1612,9 +1644,11 @@ send {delete}
 return
 
 redo:
-send {ctrl down}{y down}{ctrl up}{y up}
-if(vstshortcuts := 1){
-gosub, VSTredo
+if(vstshortcuts = 1){
+	gosub, VSTredo
+}
+else{
+	sendinput {ctrl down}{y}{ctrl up}
 }
 Return
 
@@ -1861,6 +1895,187 @@ sendinput {ctrl down}{z}{ctrl up}
 ; large 1.592760
 ; extra large 1.602108
 Return
+
+SmartUndo:
+WinGetTitle, wintitleoutput, A
+if (RegExMatch(wintitleoutput, "i)^ShaperBox\s*3(?:/|$)")){
+	gosub, SmartUndoShaperBox3
+	Return
+}
+MsgBox, 48, LES+ Smart Undo, % "Smart Undo does not support the focused plugin:`n" . wintitleoutput
+Return
+
+SmartUndoShaperBox3:
+smartUndoImagePattern := A_ScriptDir . "\resources\img-refs\sb3\undo*.png"
+smartUndoClickBiasX := 0.50
+smartUndoClickBiasY := 0.50
+smartUndoScales := "100,90,110,80,120,70,130"
+smartUndoVariations := "30,45,60"
+smartUndoResult := TryImagePatternClickInActiveWindow(smartUndoImagePattern, smartUndoScales, smartUndoVariations, smartUndoClickBiasX, smartUndoClickBiasY, smartundodebug, smartUndoDebugMessage)
+if (smartUndoResult = 1){
+	if (smartundodebug = 1){
+		MsgBox, 64, LES+ Smart Undo Debug, % smartUndoDebugMessage
+	}
+	Return
+}
+if (smartUndoResult = -2){
+	MsgBox, 16, LES+ Smart Undo, % "No ShaperBox Undo image permutations found.`nExpected files: " . smartUndoImagePattern
+	Return
+}
+if (smartUndoResult = -1){
+	MsgBox, 16, LES+ Smart Undo, % "ShaperBox 3 Undo image could not be loaded for ImageSearch.`n`n" . smartUndoDebugMessage
+	Return
+}
+MsgBox, 48, LES+ Smart Undo, % "ShaperBox 3 Undo was not found.`n`n" . smartUndoDebugMessage
+Return
+
+SmartRedo:
+WinGetTitle, wintitleoutput, A
+if (RegExMatch(wintitleoutput, "i)^ShaperBox\s*3(?:/|$)")){
+	gosub, SmartRedoShaperBox3
+	Return
+}
+if (WinActive("ahk_class AbletonVstPlugClass") or WinActive("ahk_class Vst3PlugWindow")){
+	MsgBox, 48, LES+ Smart Redo, % "Smart Redo is not supported for this plugin:`n" . wintitleoutput
+	Return
+}
+sendinput {ctrl down}{shift down}{y}{shift up}{ctrl up}
+Return
+
+SmartRedoShaperBox3:
+smartRedoImagePattern := A_ScriptDir . "\resources\img-refs\sb3\redo*.png"
+smartRedoClickBiasX := 0.50
+smartRedoClickBiasY := 0.50
+smartRedoScales := "100,90,110,80,120,70,130"
+smartRedoVariations := "30,45,60"
+smartRedoResult := TryImagePatternClickInActiveWindow(smartRedoImagePattern, smartRedoScales, smartRedoVariations, smartRedoClickBiasX, smartRedoClickBiasY, smartundodebug, smartRedoDebugMessage)
+if (smartRedoResult = 1){
+	if (smartundodebug = 1){
+		MsgBox, 64, LES+ Smart Redo Debug, % smartRedoDebugMessage
+	}
+	Return
+}
+if (smartRedoResult = -2){
+	MsgBox, 16, LES+ Smart Redo, % "No ShaperBox Redo image permutations found.`nExpected files: " . smartRedoImagePattern
+	Return
+}
+if (smartRedoResult = -1){
+	MsgBox, 16, LES+ Smart Redo, % "ShaperBox 3 Redo image could not be loaded for ImageSearch.`n`n" . smartRedoDebugMessage
+	Return
+}
+MsgBox, 48, LES+ Smart Redo, % "ShaperBox 3 Redo was not found.`n`n" . smartRedoDebugMessage
+Return
+
+SmartUndoHideDebugBox:
+Gui, SmartUndoDebug:Destroy
+Return
+
+GetImageSize(imagePath, ByRef outW, ByRef outH){
+	outW := 0
+	outH := 0
+	hBitmap := LoadPicture(imagePath)
+	if (!hBitmap){
+		return 0
+	}
+	VarSetCapacity(bitmapInfo, 24, 0)
+	if (A_PtrSize = 8){
+		bufferSize := 32
+		VarSetCapacity(bitmapInfo, bufferSize, 0)
+	}
+	DllCall("GetObject", "Ptr", hBitmap, "Int", VarSetCapacity(bitmapInfo), "Ptr", &bitmapInfo)
+	outW := NumGet(bitmapInfo, 4, "Int")
+	outH := NumGet(bitmapInfo, 8, "Int")
+	DllCall("DeleteObject", "Ptr", hBitmap)
+	if (outW <= 0 or outH <= 0){
+		return 0
+	}
+	return 1
+}
+
+TryImagePatternClickInActiveWindow(imagePattern, scalesCsv, variationsCsv, clickBiasX, clickBiasY, debugEnabled, ByRef debugMessage){
+	imageCount := 0
+	triedImages := ""
+	attemptCount := 0
+	attemptPreview := ""
+	attemptPreviewMax := 20
+	searchError := 0
+	WinGetTitle, activeTitle, A
+	WinGetPos, left, top, width, height, A
+	right := left + width - 1
+	bottom := top + height - 1
+
+	Loop, Files, %imagePattern%, F
+	{
+		image := A_LoopFileFullPath
+		imageName := A_LoopFileName
+		imageCount := imageCount + 1
+		if (triedImages = ""){
+			triedImages := imageName
+		}
+		else{
+			triedImages := triedImages . ", " . imageName
+		}
+		if (!GetImageSize(image, baseW, baseH)){
+			searchError := 1
+			continue
+		}
+
+		Loop, Parse, variationsCsv, `,
+		{
+			variation := A_LoopField
+			Loop, Parse, scalesCsv, `,
+			{
+				scale := A_LoopField
+				attemptCount := attemptCount + 1
+				if (attemptCount <= attemptPreviewMax){
+					attemptPreview := attemptPreview . "#" . attemptCount . " " . imageName . " v" . variation . " s" . scale . "%`n"
+				}
+				templateW := Round(baseW * scale / 100)
+				templateH := Round(baseH * scale / 100)
+				searchOptions := "*" . variation . " *w" . templateW . " *h" . templateH . " *TransBlack " . image
+				ImageSearch, foundX, foundY, %left%, %top%, %right%, %bottom%, %searchOptions%
+				if (ErrorLevel = 0){
+					clickX := foundX + Floor(templateW * clickBiasX)
+					clickY := foundY + Floor(templateH * clickBiasY)
+					if (debugEnabled = 1){
+						ShowMatchDebugBox(foundX, foundY, templateW, templateH)
+					}
+					MouseGetPos, oldMouseX, oldMouseY
+					MouseMove, %clickX%, %clickY%, 0
+					Sleep, 10
+					Click, down left
+					Sleep, 20
+					Click, up left
+					Sleep, 10
+					MouseMove, oldMouseX, oldMouseY
+					debugMessage := "Match found.`nTitle: " . activeTitle . "`nImage: " . imageName . "`nImage native size: " . baseW . "x" . baseH . "`nVariation: " . variation . "`nScale: " . scale . "%`nMatch: (" . foundX . ", " . foundY . ")`nTemplate: " . templateW . "x" . templateH . "`nClick bias: (" . clickBiasX . ", " . clickBiasY . ")`nClick: (" . clickX . ", " . clickY . ")`nWindow: (" . left . ", " . top . ") " . width . "x" . height . "`nAttempts: " . attemptCount
+					return 1
+				}
+				if (ErrorLevel = 2){
+					searchError := 1
+				}
+			}
+		}
+	}
+
+	debugMessage := "Title: " . activeTitle . "`nWindow: (" . left . ", " . top . ") " . width . "x" . height . "`nTried images: " . triedImages . "`nTried scales: " . scalesCsv . "`nTried variation: " . variationsCsv . "`nAttempts: " . attemptCount . "`n`nAttempt preview:`n" . attemptPreview
+	if (imageCount = 0){
+		return -2
+	}
+	if (searchError = 1){
+		return -1
+	}
+	return 0
+}
+
+ShowMatchDebugBox(boxX, boxY, boxW, boxH){
+	Gui, SmartUndoDebug:Destroy
+	Gui, SmartUndoDebug:+AlwaysOnTop -Caption +ToolWindow +Border +E0x20 +LastFound
+	Gui, SmartUndoDebug:Color, FF3030
+	WinSet, Transparent, 110
+	Gui, SmartUndoDebug:Show, x%boxX% y%boxY% w%boxW% h%boxH% NoActivate
+	SetTimer, SmartUndoHideDebugBox, -900
+}
 
 VSTredo:
 if(WinActive("ahk_class AbletonVstPlugClass") or WinActive("ahk_class Vst3PlugWindow")){
