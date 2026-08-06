@@ -296,8 +296,7 @@ if (A_IsCompiled){
 }
 ; auto add delay variable.
 global autoadd_delay := 150  ; Default value for AUTO ADD
-global inputsend_delay := 25 ; Default value for INPUT SEND DELAY
-global workflow_debug_step_delay := 900 ; Delay for workflow debug steps in ms.
+global inputsend_delay := 100 ; Default value for INPUT SEND DELAY
 
 ;-----------------------------------;
 ;		  reading Settings.ini		;
