@@ -10,13 +10,13 @@ Created_Date=1
 Set_Version_Info=1
 Company_Name=IOnlyFetchBranches (Formerly Inverted Silence & Dylan Tallchief)
 File_Description=Live Enhancement Suite Plus
-File_Version=1.5.0
+File_Version=1.5.1
 Inc_File_Version=0
 Internal_Name=Live Enhancement Suite Plus
 Legal_Copyright=© 2025
 Original_Filename=Live Enhancement Suite Plus
 Product_Name=Live Enhancement Suite Plus
-Product_Version=1.5.0
+Product_Version=1.5.1
 [ICONS]
 Icon_1=%In_Dir%\resources\les_icon.ico
 Icon_2=%In_Dir%\resources\logos\Icon16@3x.ico
@@ -76,7 +76,7 @@ Menu, Tray, Add, Set Input Send Delay, ChangeInputSendDelay
 Menu, Tray, Add,
 Menu, Tray, Add,
 Menu, Tray, Add, Strict Time, stricttime
-Menu, Tray, Add, Smart Undo Debug, smartundodebugtoggle
+Menu, Tray, Add, Workflow Debug Mode, workflowdebugtoggle
 Menu, Tray, Add, Check Project Time 🕒, requesttime
 Menu, Tray, Add,
 Menu, Tray, Add, Listen/Support Me? 🥺, cupsypls
@@ -137,17 +137,23 @@ if(stricttxt = 1){
 Menu, Tray, Check, Strict Time
 }
 
-FileRead, smartundodebugtxt, %A_ScriptDir%\resources\smartundo_debug.txt
+FileRead, workflowdebugtxt, %A_ScriptDir%\resources\workflow_debug.txt
 if(ErrorLevel = 1){
-	smartundodebug := 1
-	FileDelete, %A_ScriptDir%\resources\smartundo_debug.txt
-	FileAppend, 1, %A_ScriptDir%\resources\smartundo_debug.txt
+	FileRead, workflowdebugtxt, %A_ScriptDir%\resources\smartundo_debug.txt
+	if(ErrorLevel = 1){
+		workflowdebug := 1
+	}
+	else{
+		workflowdebug := workflowdebugtxt
+	}
+	FileDelete, %A_ScriptDir%\resources\workflow_debug.txt
+	FileAppend, %workflowdebug%, %A_ScriptDir%\resources\workflow_debug.txt
 }
 else{
-	smartundodebug := smartundodebugtxt
+	workflowdebug := workflowdebugtxt
 }
-if(smartundodebug = 1){
-	Menu, Tray, Check, Smart Undo Debug
+if(workflowdebug = 1){
+	Menu, Tray, Check, Workflow Debug Mode
 }
 
 ;-----------------------------------;
@@ -291,6 +297,7 @@ if (A_IsCompiled){
 ; auto add delay variable.
 global autoadd_delay := 150  ; Default value for AUTO ADD
 global inputsend_delay := 25 ; Default value for INPUT SEND DELAY
+global workflow_debug_step_delay := 900 ; Delay for workflow debug steps in ms.
 
 ;-----------------------------------;
 ;		  reading Settings.ini		;
@@ -1343,18 +1350,18 @@ if (WinExist("ahk_exe Ableton Live ") != 0) and (trackname != ""){
 }
 Return
 
-smartundodebugtoggle:
-if (smartundodebug = 0){
-	smartundodebug := 1
-	Menu, Tray, Check, Smart Undo Debug
-	FileDelete, %A_ScriptDir%\resources\smartundo_debug.txt
-	FileAppend, 1, %A_ScriptDir%\resources\smartundo_debug.txt
+workflowdebugtoggle:
+if (workflowdebug = 0){
+	workflowdebug := 1
+	Menu, Tray, Check, Workflow Debug Mode
+	FileDelete, %A_ScriptDir%\resources\workflow_debug.txt
+	FileAppend, 1, %A_ScriptDir%\resources\workflow_debug.txt
 }
 Else{
-	smartundodebug := 0
-	Menu, Tray, Uncheck, Smart Undo Debug
-	FileDelete, %A_ScriptDir%\resources\smartundo_debug.txt
-	FileAppend, 0, %A_ScriptDir%\resources\smartundo_debug.txt
+	workflowdebug := 0
+	Menu, Tray, Uncheck, Workflow Debug Mode
+	FileDelete, %A_ScriptDir%\resources\workflow_debug.txt
+	FileAppend, 0, %A_ScriptDir%\resources\workflow_debug.txt
 }
 Return
 
@@ -1654,22 +1661,416 @@ Return
 
 quickmarker:
 WinGetActiveTitle, wintitleoutput
+WinGet, liveMainHwnd, ID, ahk_exe Ableton Live.+
+if (liveMainHwnd = ""){
+	return
+}
+quickMarkerResult := 0
+
 if !(InStr(wintitleoutput, "Live 9", CaseSensitive := false) = 0){
-WinMenuSelectItem,,, 3&, 13&
+	WinMenuSelectItem, ahk_id %liveMainHwnd%,, 3&, 13&
+	quickMarkerResult := (ErrorLevel = 0)
 }
 Else if !(InStr(wintitleoutput, "Live 10", CaseSensitive := false) = 0){
-WinMenuSelectItem,,, 3&, 14&
+	WinMenuSelectItem, ahk_id %liveMainHwnd%,, 3&, 14&
+	quickMarkerResult := (ErrorLevel = 0)
 }
 Else if !(InStr(wintitleoutput, "Live 11", CaseSensitive := false) = 0){
-WinMenuSelectItem,,, 3&, 20&
-; WinMenuSelectItem,,, 3&, 15& (this actually crashes live)
+	WinMenuSelectItem, ahk_id %liveMainHwnd%,, 3&, 20&
+	quickMarkerResult := (ErrorLevel = 0)
+	if (quickMarkerResult = 0){
+		quickMarkerResult := TryAddLocatorMenuFallbacks(liveMainHwnd, workflowdebug)
+	}
 }
-Else {
-WinmenuSelectItem,,, Create, Add Locator
+Else if !(InStr(wintitleoutput, "Live 12", CaseSensitive := false) = 0){
+	quickMarkerResult := TryAddLocatorFromCreateShortcut(liveMainHwnd, workflowdebug)
+}
+Else{
+	quickMarkerResult := TryAddLocatorMenuFallbacks(liveMainHwnd, workflowdebug)
+}
+
+if (quickMarkerResult = 0){
+	if (enabledebug = 1 or workflowdebug = 1){
+		MsgBox, 48, LES+ Locator Debug, % "Failed to trigger Add Locator.`nTitle: " . wintitleoutput . "`nMain HWND: " . liveMainHwnd
+	}
 }
 return
 
 return
+
+TryAddLocatorFromCreateShortcut(liveMainHwnd, debugEnabled := 0){
+	if (debugEnabled = 1){
+		DebugStep("Locator: trying WinMenuSelectItem Create > Add Locator")
+	}
+	WinMenuSelectItem, ahk_id %liveMainHwnd%,, Create, Add Locator
+	if (ErrorLevel = 0){
+		return 1
+	}
+	if (debugEnabled = 1){
+		DebugStep("Locator: WinMenuSelectItem Create > Add Locator failed")
+	}
+	return 0
+}
+
+TryAddLocatorMenuFallbacks(liveMainHwnd, debugEnabled := 0){
+	if (debugEnabled = 1){
+		DebugStep("Locator: trying Create > Add Locator", 180)
+	}
+	WinMenuSelectItem, ahk_id %liveMainHwnd%,, Create, Add Locator
+	if (ErrorLevel = 0){
+		return 1
+	}
+	if (debugEnabled = 1){
+		DebugStep("Locator: trying Create > Insert Locator", 180)
+	}
+	WinMenuSelectItem, ahk_id %liveMainHwnd%,, Create, Insert Locator
+	if (ErrorLevel = 0){
+		return 1
+	}
+	if (debugEnabled = 1){
+		DebugStep("Locator: trying Edit > Add Locator", 180)
+	}
+	WinMenuSelectItem, ahk_id %liveMainHwnd%,, Edit, Add Locator
+	if (ErrorLevel = 0){
+		return 1
+	}
+	if (debugEnabled = 1){
+		DebugStep("Locator: trying numeric path 3&,20&", 180)
+	}
+	WinMenuSelectItem, ahk_id %liveMainHwnd%,, 3&, 20&
+	if (ErrorLevel = 0){
+		return 1
+	}
+	if (debugEnabled = 1){
+		DebugStep("Locator: trying numeric path 3&,21&", 180)
+	}
+	WinMenuSelectItem, ahk_id %liveMainHwnd%,, 3&, 21&
+	if (ErrorLevel = 0){
+		return 1
+	}
+	if (debugEnabled = 1){
+		DebugStep("Locator: trying numeric path 3&,22&", 180)
+	}
+	WinMenuSelectItem, ahk_id %liveMainHwnd%,, 3&, 22&
+	if (ErrorLevel = 0){
+		return 1
+	}
+	return 0
+}
+
+TryAddLocatorFromTransportAnchor(liveMainHwnd, debugEnabled := 0){
+	MouseGetPos, originalX, originalY
+	WinGetPos, wx, wy, wWidth, wHeight, ahk_id %liveMainHwnd%
+	if (wWidth = "" or wHeight = ""){
+		return 0
+	}
+
+	transportPattern := A_ScriptDir . "\resources\img-refs\ableton\transport*.png"
+	menuSignaturePattern := A_ScriptDir . "\resources\img-refs\ableton\locator_menu*.png"
+	locatorPattern := A_ScriptDir . "\resources\img-refs\ableton\add_locator*.png"
+	hasTransportImages := 0
+	Loop, Files, %transportPattern%
+	{
+		hasTransportImages := 1
+		break
+	}
+	if (hasTransportImages = 0){
+		if (debugEnabled = 1){
+			DebugStep("Locator: missing transport*.png references")
+		}
+		return 0
+	}
+	hasLocatorImages := 0
+	Loop, Files, %locatorPattern%
+	{
+		hasLocatorImages := 1
+		break
+	}
+	if (hasLocatorImages = 0){
+		if (debugEnabled = 1){
+			DebugStep("Locator: missing add_locator*.png references")
+		}
+		return 0
+	}
+	hasMenuSignatureImages := 0
+	Loop, Files, %menuSignaturePattern%
+	{
+		hasMenuSignatureImages := 1
+		break
+	}
+	if (hasMenuSignatureImages = 0 and debugEnabled = 1){
+		DebugStep("Locator: missing locator_menu*.png references (continuing with add_locator-only checks)")
+	}
+	transportResult := TryFindImagePatternInRect(transportPattern, wx, wy, (wx + wWidth - 1), (wy + wHeight - 1), "100,90,110,80,120", "20,35,50", transportX, transportY, transportW, transportH, transportName, transportDebug)
+	if (transportResult != 1){
+		if (debugEnabled = 1){
+			DebugStep("Locator: transport anchor not found")
+		}
+		return 0
+	}
+
+	probeBandShift := Round(wHeight * 0.10)
+	if (probeBandShift < 64){
+		probeBandShift := 64
+	}
+	if (probeBandShift > 180){
+		probeBandShift := 180
+	}
+
+	targetX := originalX
+	if (targetX < wx + 20){
+		targetX := wx + 20
+	}
+	if (targetX > wx + wWidth - 20){
+		targetX := wx + wWidth - 20
+	}
+
+	preferredProbeY := wy + 183
+	if (preferredProbeY < wy + 40){
+		preferredProbeY := wy + 40
+	}
+	if (preferredProbeY > wy + wHeight - 20){
+		preferredProbeY := wy + wHeight - 20
+	}
+	candidateProbeYs := preferredProbeY . "," . (transportY + probeBandShift) . "," . (transportY + probeBandShift + 14) . "," . (transportY + probeBandShift + 28) . "," . (transportY + probeBandShift + 42) . "," . (transportY + probeBandShift + 56) . "," . (transportY + probeBandShift + 70) . "," . (transportY + probeBandShift + 84)
+
+	Loop, Parse, candidateProbeYs, `,
+	{
+		targetY := A_LoopField + 0
+		if (targetY < wy + 40){
+			targetY := wy + 40
+		}
+		if (targetY > wy + wHeight - 20){
+			targetY := wy + wHeight - 20
+		}
+
+		if (debugEnabled = 1){
+			ShowMatchDebugBox(targetX - 8, targetY - 8, 16, 16)
+			DebugStep("Locator: probing from transport anchor (" . transportName . ") shift=" . probeBandShift . " y=" . targetY)
+		}
+
+		MouseMove, %targetX%, %targetY%, 0
+		Sleep, 10
+		Click, Right
+		WinWaitActive, ahk_class #32768,, 0.25
+		if (ErrorLevel != 0){
+			continue
+		}
+
+		WinGetPos, menuX, menuY, menuW, menuH, ahk_class #32768
+		if (menuW != "" and menuH != ""){
+			menuLeft := menuX
+			menuTop := menuY
+			menuRight := menuX + menuW - 1
+			menuBottom := menuY + menuH - 1
+		}
+		else{
+			menuLeft := targetX - 30
+			menuTop := targetY - 20
+			menuRight := targetX + 420
+			menuBottom := targetY + 340
+		}
+
+		menuSearchLeft := menuLeft - 16
+		menuSearchTop := menuTop - 16
+		menuSearchRight := menuRight + 16
+		menuSearchBottom := menuBottom + 16
+		if (menuSearchLeft < wx){
+			menuSearchLeft := wx
+		}
+		if (menuSearchTop < wy){
+			menuSearchTop := wy
+		}
+		if (menuSearchRight > wx + wWidth - 1){
+			menuSearchRight := wx + wWidth - 1
+		}
+		if (menuSearchBottom > wy + wHeight - 1){
+			menuSearchBottom := wy + wHeight - 1
+		}
+
+		directLocatorHit := 0
+		hadMenuSignatureMatch := 0
+		if (hasMenuSignatureImages = 1){
+			menuSignatureResult := 0
+			Loop, 5
+			{
+				directLocatorHit := TryFindImagePatternInRect(locatorPattern, menuSearchLeft, menuSearchTop, menuSearchRight, menuSearchBottom, "100,95,105,90,110,85,115", "20,30,40,50,65,80", foundMenuX, foundMenuY, foundMenuW, foundMenuH, foundMenuName, menuDebug)
+				if (directLocatorHit = 1){
+					menuSignatureResult := 1
+					break
+				}
+				menuSignatureResult := TryFindImagePatternInRect(menuSignaturePattern, menuSearchLeft, menuSearchTop, menuSearchRight, menuSearchBottom, "100,95,105,90,110,85,115", "20,30,40,50,65,80", foundSigX, foundSigY, foundSigW, foundSigH, foundSigName, sigDebug)
+				if (menuSignatureResult = 1){
+					hadMenuSignatureMatch := 1
+					break
+				}
+				Sleep, 45
+			}
+
+			if (menuSignatureResult != 1){
+				if (debugEnabled = 1){
+					DebugStep("Locator: probe menu does not match locator_menu signature, closing and probing next")
+				}
+				SendInput {Esc}
+				Sleep, 40
+				continue
+			}
+
+			if (debugEnabled = 1){
+				if (directLocatorHit = 1){
+					ShowMatchDebugBox(foundMenuX, foundMenuY, foundMenuW, foundMenuH)
+					DebugStep("Locator: Add Locator detected directly in open menu")
+				}
+				else{
+					ShowMatchDebugBox(foundSigX, foundSigY, foundSigW, foundSigH)
+					DebugStep("Locator: locator_menu signature matched, checking Add Locator in this menu")
+				}
+			}
+		}
+
+		menuResult := directLocatorHit
+		if (menuResult != 1){
+			Loop, 5
+			{
+				menuResult := TryFindImagePatternInRect(locatorPattern, menuSearchLeft, menuSearchTop, menuSearchRight, menuSearchBottom, "100,95,105,90,110,85,115", "20,30,40,50,65,80", foundMenuX, foundMenuY, foundMenuW, foundMenuH, foundMenuName, menuDebug)
+				if (menuResult = 1){
+					break
+				}
+				Sleep, 45
+			}
+		}
+
+		if (menuResult = 1){
+			clickMenuX := foundMenuX + Floor(foundMenuW / 2)
+			clickMenuY := foundMenuY + Floor(foundMenuH / 2)
+			if (debugEnabled = 1){
+				ShowMatchDebugBox(foundMenuX, foundMenuY, foundMenuW, foundMenuH)
+				DebugStep("Locator: Add Locator menu item found, clicking")
+			}
+			MouseMove, %clickMenuX%, %clickMenuY%, 0
+			Sleep, 10
+			Click
+			MouseMove, %originalX%, %originalY%, 0
+			return 1
+		}
+
+		if (debugEnabled = 1){
+			DebugStep("Locator: Add Locator not detected in matched menu")
+		}
+		if (hadMenuSignatureMatch = 1){
+			if (menuW != "" and menuH != ""){
+				fallbackClickX := menuLeft + Floor(menuW * 0.45)
+				fallbackClickY := menuTop + Floor(menuH * 0.84)
+				if (fallbackClickX < menuLeft + 8){
+					fallbackClickX := menuLeft + 8
+				}
+				if (fallbackClickX > menuRight - 8){
+					fallbackClickX := menuRight - 8
+				}
+				if (fallbackClickY < menuTop + 8){
+					fallbackClickY := menuTop + 8
+				}
+				if (fallbackClickY > menuBottom - 8){
+					fallbackClickY := menuBottom - 8
+				}
+				if (debugEnabled = 1){
+					ShowMatchDebugBox(fallbackClickX - 6, fallbackClickY - 6, 12, 12)
+					DebugStep("Locator: signature matched; fallback clicking third menu row")
+				}
+				MouseMove, %fallbackClickX%, %fallbackClickY%, 0
+				Sleep, 10
+				Click
+				MouseMove, %originalX%, %originalY%, 0
+				return 1
+			}
+
+			SendInput {Esc}
+			Sleep, 40
+			MouseMove, %originalX%, %originalY%, 0
+			return 0
+		}
+
+		SendInput {Esc}
+		Sleep, 40
+	}
+
+	MouseMove, %originalX%, %originalY%, 0
+	return 0
+}
+
+TryAddLocatorFromArrangementContext(liveMainHwnd, debugEnabled := 0){
+	MouseGetPos, originalX, originalY
+	WinGetPos, wx, wy, wWidth, wHeight, ahk_id %liveMainHwnd%
+	if (wWidth = "" or wHeight = ""){
+		return 0
+	}
+
+	targetX := originalX
+	targetYSeed := originalY
+	minTargetY := wy + Round((windowedcompensationpx*(31/48) + 68))
+	maxTargetY := wy + wHeight - 20
+	candidateYs := ""
+
+	if (targetYSeed >= minTargetY and targetYSeed <= maxTargetY){
+		candidateYs := targetYSeed
+	}
+
+	for _, offsetY in [96, 112, 128, 144, 164]{
+		candidateY := wy + Round((windowedcompensationpx*(31/48) + offsetY))
+		if (candidateY < minTargetY){
+			candidateY := minTargetY
+		}
+		if (candidateY > maxTargetY){
+			candidateY := maxTargetY
+		}
+		if (candidateYs = ""){
+			candidateYs := candidateY
+		}
+		else{
+			candidateYs := candidateYs . "," . candidateY
+		}
+	}
+
+	if (targetX < wx + 20){
+		targetX := wx + 20
+	}
+	if (targetX > wx + wWidth - 20){
+		targetX := wx + wWidth - 20
+	}
+
+	Loop, Parse, candidateYs, `,
+	{
+		targetY := A_LoopField + 0
+		if (targetY < minTargetY or targetY > maxTargetY){
+			continue
+		}
+		if (targetY <= wy + 55){
+			continue
+		}
+		if (debugEnabled = 1){
+			ShowMatchDebugBox(targetX - 8, targetY - 8, 16, 16)
+			DebugStep("Locator: right-click ruler probe at Y=" . targetY)
+		}
+
+		MouseMove, %targetX%, %targetY%, 0
+		Sleep, 10
+		Click, Right
+		WinWaitActive, ahk_class #32768,, 0.25
+		if (ErrorLevel != 0){
+			continue
+		}
+		if (debugEnabled = 1){
+			DebugStep("Locator: selecting Add Locator from context menu")
+		}
+		SendInput {Down 2}{Enter}
+		Sleep, 20
+		MouseMove, %originalX%, %originalY%, 0
+		return 1
+	}
+
+	MouseMove, %originalX%, %originalY%, 0
+	return 0
+}
 
 freezetrack:
 if !(InStr(wintitleoutput, "Live 11", CaseSensitive := false) = 0){
@@ -1911,9 +2312,9 @@ smartUndoClickBiasX := 0.50
 smartUndoClickBiasY := 0.50
 smartUndoScales := "100,90,110,80,120,70,130"
 smartUndoVariations := "30,45,60"
-smartUndoResult := TryImagePatternClickInActiveWindow(smartUndoImagePattern, smartUndoScales, smartUndoVariations, smartUndoClickBiasX, smartUndoClickBiasY, smartundodebug, smartUndoDebugMessage)
+smartUndoResult := TryImagePatternClickInActiveWindow(smartUndoImagePattern, smartUndoScales, smartUndoVariations, smartUndoClickBiasX, smartUndoClickBiasY, workflowdebug, smartUndoDebugMessage)
 if (smartUndoResult = 1){
-	if (smartundodebug = 1){
+	if (workflowdebug = 1){
 		MsgBox, 64, LES+ Smart Undo Debug, % smartUndoDebugMessage
 	}
 	Return
@@ -1948,9 +2349,9 @@ smartRedoClickBiasX := 0.50
 smartRedoClickBiasY := 0.50
 smartRedoScales := "100,90,110,80,120,70,130"
 smartRedoVariations := "30,45,60"
-smartRedoResult := TryImagePatternClickInActiveWindow(smartRedoImagePattern, smartRedoScales, smartRedoVariations, smartRedoClickBiasX, smartRedoClickBiasY, smartundodebug, smartRedoDebugMessage)
+smartRedoResult := TryImagePatternClickInActiveWindow(smartRedoImagePattern, smartRedoScales, smartRedoVariations, smartRedoClickBiasX, smartRedoClickBiasY, workflowdebug, smartRedoDebugMessage)
 if (smartRedoResult = 1){
-	if (smartundodebug = 1){
+	if (workflowdebug = 1){
 		MsgBox, 64, LES+ Smart Redo Debug, % smartRedoDebugMessage
 	}
 	Return
@@ -1990,6 +2391,66 @@ GetImageSize(imagePath, ByRef outW, ByRef outH){
 		return 0
 	}
 	return 1
+}
+
+TryFindImagePatternInRect(imagePattern, left, top, right, bottom, scalesCsv, variationsCsv, ByRef foundX, ByRef foundY, ByRef foundW, ByRef foundH, ByRef foundImageName, ByRef debugMessage){
+	imageCount := 0
+	triedImages := ""
+	attemptCount := 0
+	searchError := 0
+
+	Loop, Files, %imagePattern%, F
+	{
+		image := A_LoopFileFullPath
+		imageName := A_LoopFileName
+		imageCount := imageCount + 1
+		if (triedImages = ""){
+			triedImages := imageName
+		}
+		else{
+			triedImages := triedImages . ", " . imageName
+		}
+
+		if (!GetImageSize(image, baseW, baseH)){
+			searchError := 1
+			continue
+		}
+
+		Loop, Parse, variationsCsv, `,
+		{
+			variation := A_LoopField
+			Loop, Parse, scalesCsv, `,
+			{
+				scale := A_LoopField
+				attemptCount := attemptCount + 1
+				templateW := Round(baseW * scale / 100)
+				templateH := Round(baseH * scale / 100)
+				searchOptions := "*" . variation . " *w" . templateW . " *h" . templateH . " *TransBlack " . image
+				ImageSearch, matchX, matchY, %left%, %top%, %right%, %bottom%, %searchOptions%
+				if (ErrorLevel = 0){
+					foundX := matchX
+					foundY := matchY
+					foundW := templateW
+					foundH := templateH
+					foundImageName := imageName
+					debugMessage := "match: " . imageName . " v" . variation . " s" . scale . "% at (" . matchX . ", " . matchY . ")"
+					return 1
+				}
+				if (ErrorLevel = 2){
+					searchError := 1
+				}
+			}
+		}
+	}
+
+	debugMessage := "no match in rect (" . left . ", " . top . ")-(" . right . ", " . bottom . "), images: " . triedImages . ", attempts: " . attemptCount
+	if (imageCount = 0){
+		return -2
+	}
+	if (searchError = 1){
+		return -1
+	}
+	return 0
 }
 
 TryImagePatternClickInActiveWindow(imagePattern, scalesCsv, variationsCsv, clickBiasX, clickBiasY, debugEnabled, ByRef debugMessage){
@@ -2075,6 +2536,16 @@ ShowMatchDebugBox(boxX, boxY, boxW, boxH){
 	WinSet, Transparent, 110
 	Gui, SmartUndoDebug:Show, x%boxX% y%boxY% w%boxW% h%boxH% NoActivate
 	SetTimer, SmartUndoHideDebugBox, -900
+}
+
+DebugStep(message, delayMs := 220){
+	global workflow_debug_step_delay
+	if (delayMs = ""){
+		delayMs := workflow_debug_step_delay
+	}
+	ToolTip, %message%
+	Sleep, %delayMs%
+	ToolTip
 }
 
 VSTredo:
